@@ -1,10 +1,31 @@
 import Head from "next/head";
+import { createClient } from 'contentful';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
-export default function NewToHotYogaGhent() {
+const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID || '',
+  accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+});
+
+export async function getStaticProps() {
+  const res: any = await client.getEntry('4buPM5IDcrk3byRf2Ph5Tn');
+  const { pageTitle, contents } = res.fields;
+  
+  return {
+    props: { 
+      pageTitle,
+      contents,
+    },
+    revalidate: 10,  // revalidate at most every 10 seconds
+  };
+}
+
+
+export default function NewToHotYogaGhent({pageTitle, contents}: {pageTitle: String, contents: any}) {
   return (
     <>
       <Head>
-        <title>Hot Yoga Ghent</title>
+        <title>{pageTitle}</title>
         <meta
           name="description"
           content="Welcome to the website of Hot Yoga Ghent"
@@ -12,8 +33,13 @@ export default function NewToHotYogaGhent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-white">
-        <h1>Welcome</h1>
+
+      {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
+      <main className="bg-white prose">
+
+        {documentToReactComponents(contents)}
+
+        {/* <h1>Welcome</h1>
         <p>to the first Hot Yoga studio in Ghent.</p>
         <p>All our classes are beginner friendly. No stress - it&apos;s only yoga 😉.</p>
         <p>Send an email to hotyogagent@gmail.com to sign up for your starter week.</p>
@@ -33,7 +59,8 @@ export default function NewToHotYogaGhent() {
           <li>we have changing rooms, showers & lockers</li>
         </ul>
         <p>All our classes are guided by certified instructors and are suitable for beginners while still challenging for advanced practitioners.</p>
-        <p>Come with an open heart and mind. We are looking forward to seeing you soon @Hot Yoga Ghent</p>
+        <p>Come with an open heart and mind. We are looking forward to seeing you soon @Hot Yoga Ghent</p> */}
+
       </main>
     </>
   );
