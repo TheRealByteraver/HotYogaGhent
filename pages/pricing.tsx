@@ -1,10 +1,30 @@
 import Head from "next/head";
+import { createClient } from 'contentful';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
-export default function Pricing() {
+export async function getStaticProps() {
+  const client = createClient({
+    space: process.env.CONTENTFUL_SPACE_ID || '',
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+  });
+  
+  const res: any = await client.getEntry('4XqknYjQoHimUAyL5iwn1O');
+  const { pageTitle, contents } = res.fields;
+  
+  return {
+    props: { 
+      pageTitle,
+      contents,
+    },
+    revalidate: 10,  // revalidate at most every 10 seconds
+  };
+}
+
+export default function Pricing({pageTitle, contents}: {pageTitle: String, contents: any}) {
   return (
     <>
       <Head>
-        <title>Hot Yoga Ghent</title>
+        <title>{pageTitle}</title>
         <meta
           name="description"
           content="Welcome to the website of Hot Yoga Ghent"
@@ -12,8 +32,13 @@ export default function Pricing() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-white">
-        <ul>
+
+      {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
+      <main className="bg-white prose">
+        {documentToReactComponents(contents)}
+
+      
+        {/* <ul>
           <li>Starter: Come and try out the first week/ 7 days for 25 € *</li>
           <li>Drop in: 20 €</li>
           <li>Monthly card: 90/120** €</li>
@@ -22,7 +47,7 @@ export default function Pricing() {
         </ul>
         <p>*Towels and mat are included</p>
         <p>**Discount price for students and seniors</p>
-        <p><strong>All subscription types are non refundable.</strong></p>
+        <p><strong>All subscription types are non refundable.</strong></p> */}
         
       </main>
     </>

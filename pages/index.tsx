@@ -17,10 +17,11 @@ export async function getStaticProps() {
   
   // the content_type is the _id_ from Contentful and can be found 
   // in the Contentful control panel
-  const res: any = await client.getEntries({ content_type: 'landingPageTitle' });
+  const res: any = await client.getEntry('5cZrlNAQHbQFIT7vDgtxt9');
+  const { landingPageTitle } = res.fields;
   
   return {
-    props: { landingPageTitle: res.items[0].fields.landingPageTitle },
+    props: { landingPageTitle },
     revalidate: 10, // regenerate the page at most every 10 seconds
   }
 }
