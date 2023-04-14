@@ -22,7 +22,7 @@ export async function getStaticProps() {
   
   return {
     props: { landingPageTitle },
-    revalidate: 10, // regenerate the page at most every 10 seconds
+    // revalidate: 10, // regenerate the page at most every 10 seconds
   }
 }
 

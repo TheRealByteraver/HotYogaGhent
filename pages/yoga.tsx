@@ -16,7 +16,7 @@ export async function getStaticProps() {
       pageTitle,
       contents,
     },
-    revalidate: 10,  // revalidate at most every 10 seconds
+    // revalidate: 10,  // revalidate at most every 10 seconds
   };
 }
 

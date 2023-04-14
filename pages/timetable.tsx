@@ -16,13 +16,14 @@ export async function getStaticProps() {
 
   // console.log('timeTable', timeTable);
   // console.log('contents', contents);
+  console.log('created at:', contents.sys.createdAt);
 
   return {
     props: { 
       timeTable: timeTable.fields.timetableData.timeTable,
       contents: contents.fields.contents
     },
-    revalidate: 10,  // revalidate at most every 10 seconds
+    // revalidate: 10,  // revalidate at most every 10 seconds
   };
 }
 
@@ -125,7 +126,6 @@ function TimeTable({timeTable}: any) {
     </table>
   );
 }
-
 
 export default function TimetablePage(props: any) {
   // console.log('props.timeTable:', props.timeTable);
