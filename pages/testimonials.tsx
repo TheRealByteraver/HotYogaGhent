@@ -74,7 +74,7 @@ export default function Testimonials(props: any) {
         <h1>Testimonials</h1>
         <ul>
         {
-          props.testimonials.map((testimonial: any, index: number) => (
+          props.testimonials.map((testimonial: any) => (
             <li key={testimonial.id}>
               <Image 
                 src={testimonial.avatarUrl}
