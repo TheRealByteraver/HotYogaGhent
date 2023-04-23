@@ -47,7 +47,7 @@ export default function Home() {
 
           <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">
             <div className="mx-auto w-10 h-10 m-2 bg-lime-500"></div>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae, maiores? Molestias aut error ea doloremque.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Itaque magni ipsa possimus repudiandae non odit, praesentium rem quos fugiat quis soluta aspernatur placeat sit, animi quas exercitationem, illo neque consequuntur!</p>
           </div>
 
           <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">

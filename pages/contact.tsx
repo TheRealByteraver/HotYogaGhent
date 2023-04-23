@@ -18,8 +18,6 @@ async function sendMail(emailData: any) {
     // redirect: "follow", // manual, *follow, error
     // referrerPolicy: "no-referrer",
     body: JSON.stringify({
-      // replyTo: "erland.vo@telenet.be", // filled in by the user
-      // text: "<script>alert('hello there')</script>Hey, ik zou graag NOG meer hot yoga lessen volgen", // plain text body
       replyTo: emailData.replyTo,
       text: emailData.text
     }), 
@@ -41,11 +39,11 @@ export default function Contact() {
     console.log('event', event);  
   
     if (captchaValidated) {
-      console.log('sending message!');
-      // sendMail({
-      //   replyTo: "erland.vo@telenet.be",
-      //   text: "<script>alert('hello there')</script>Hey, ik zou graag NOG meer hot yoga lessen volgen"
-      // });  
+      // console.log('sending message!');
+      sendMail({
+        replyTo: "erland.vo@telenet.be",
+        text: "customer message placeholder"
+      });  
     }
   }
   
@@ -80,7 +78,7 @@ export default function Contact() {
           <label htmlFor="messageBody">Message</label>
           <textarea id="messageBody" name="messageBody" rows={5} cols={33} className="border border-black mb-2"></textarea>
           <ReCAPTCHA
-            sitekey={process.env.RECAPTCHA_SITE_KEY || ''}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
             onChange={onCaptchaChange}
           />          
           <button type="submit" disabled={!captchaValidated} className="border-2 border-red-400 rounded p-2 mt-2 w-40">Send Message</button>
