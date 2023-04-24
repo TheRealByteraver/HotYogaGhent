@@ -1,13 +1,23 @@
 import Head from "next/head";
 import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import Input from "@/components/ui/Input";
 
 /*
   To add: facebook link, instagram link, map with location, instructions for bike parking
   sitemap ! nextjs feature
 */
 
-async function sendMail(emailData: any) {
+// same definition as in /pages/api/hello.ts
+type ContactFormInputs = {
+  fullName: string,
+  emailAddress: string,
+  message: string,
+};
+
+async function sendMail(emailData: ContactFormInputs) {
   const response = await fetch('/api/hello', {
     method: "POST", 
     // mode: "same-origin", 
@@ -17,10 +27,7 @@ async function sendMail(emailData: any) {
     },
     // redirect: "follow", // manual, *follow, error
     // referrerPolicy: "no-referrer",
-    body: JSON.stringify({
-      replyTo: emailData.replyTo,
-      text: emailData.text
-    }), 
+    body: JSON.stringify(emailData),
   });
 
   console.log('response.status:', response.status);
@@ -28,24 +35,18 @@ async function sendMail(emailData: any) {
 }
 
 export default function Contact() {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<ContactFormInputs>();
   const [captchaValidated, setcaptchaValidated] = useState(false);
 
   function onCaptchaChange(value: any) {
     setcaptchaValidated(value);
   }
 
-  const submitHandler = async (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('event', event);  
-  
+  const onSubmit: SubmitHandler<ContactFormInputs> = data => {
     if (captchaValidated) {
-      // console.log('sending message!');
-      sendMail({
-        replyTo: "erland.vo@telenet.be",
-        text: "customer message placeholder"
-      });  
+      sendMail(data);
     }
-  }
+  };
   
   return (
     <>
@@ -70,13 +71,22 @@ export default function Contact() {
         <p>By mail: hotyogagent@gmail.com</p>
         <p>On Facebook: Hot Yoga Gent</p>
         <h2>Send us a message</h2>
-        <form onSubmit={submitHandler} className="flex flex-col w-full border border-black mt-4 p-4">
-          <label htmlFor="fullName">Name</label>
-          <input type="text" name="fullName" id="fullName" className="border border-black " />
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" className="border border-black" />
-          <label htmlFor="messageBody">Message</label>
-          <textarea id="messageBody" name="messageBody" rows={5} cols={33} className="border border-black mb-2"></textarea>
+        <form  onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full border border-black mt-4 p-4">
+          <Input {...register('fullName', { required: true })}
+            placeholder='Enter your name here'
+            label='Name'
+            error={errors.fullName}
+          />
+          <Input {...register('emailAddress', { required: true })} 
+            placeholder='Enter your e-mail address here' 
+            label='Email Address'
+            error={errors.emailAddress} 
+          />
+          <Input {...register('message', { required: true })} 
+            placeholder='Type your message here'
+            label='Message' 
+            error={errors.message} 
+          />
           <ReCAPTCHA
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
             onChange={onCaptchaChange}

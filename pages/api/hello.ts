@@ -1,9 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createClient } from 'contentful';
 
 const nodemailer = require("nodemailer");
 
-async function sendMessage(messageData: any) {
+// same as type ContactFormInputs in pages/contact.tsx
+type ContactFormInputs = {
+  fullName: string,
+  emailAddress: string,
+  message: string,
+};
+
+async function sendMessage(messageData: ContactFormInputs) {
 
   // create reusable transporter object using the default SMTP transport
   const transporter = nodemailer.createTransport({
@@ -16,35 +24,53 @@ async function sendMessage(messageData: any) {
     },
   });
 
+  // Create the Contentful client
+  const client = createClient({
+    space: process.env.CONTENTFUL_SPACE_ID || '',
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+  });
+  
+  // the content_type is the _id_ from Contentful and can be found 
+  // in the Contentful control panel
+  const res: any = await client.getEntry('28VFltyu4kgFL7N1VR5TnZ');
+  const { emailAddress } = res.fields;
+
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: `"Hot Yoga Ghent Contact Form" ${messageData.replyTo}`, // sender address
-    to: process.env.CONTACTFORM_RECIPIENT, // list of receivers
+    from: `"Hot Yoga Ghent Contact Form" ${messageData.emailAddress}`, // sender address
+    // to: process.env.CONTACTFORM_RECIPIENT, // list of receivers
+    to: emailAddress,
     subject: "Message from the Hot Yoga Ghent Contact Form", // Subject line
     text: `Dear Karel 
           
-          Please consider the following message sent by ${messageData.replyTo}. 
+          Please consider the following message sent by:
+          Name: ${messageData.fullName}
+          Email address: ${messageData.emailAddress}
+
           Simply reply to the message to answer the customer.
           (Sent by the Contact Form of the Hot Yoga Ghent website)
 
           ---------------------------------------------------------------------
-          ${messageData.text}
+          ${messageData.message}
           ---------------------------------------------------------------------`, // plain text body
     html: `
         <h3>Dear Karel</h3> 
         <main>      
-          <p>Please consider the following message sent by ${messageData.replyTo}. 
-          Simply reply to the message to answer the customer.</p>
+          <p>Please consider the following message sent by:</p>
+          <ul>
+            <li>Name: ${messageData.fullName}</li>
+            <li>Email address: ${messageData.emailAddress}</li>
+          </ul>
+
+          <p>Simply reply to the message to answer the customer.</p>
           <p><em>Sent by the Contact Form of the Hot Yoga Ghent website.</em></p>
           <hr>
-          <blockquote>${messageData.text}</blockquote>
+          <blockquote>${messageData.message}</blockquote>
           <hr>
         </main>`, // html body
   });
-  // console.log("Message sent: %s", info.messageId);
+  console.log("Message sent: %s", info.messageId);
 }
-
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, query } = req;
@@ -63,8 +89,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     case 'POST':
       const response: any = await sendMessage({
-        replyTo: req.body.replyTo,
-        text: req.body.text,
+        fullName: req.body.fullName,
+        emailAddress: req.body.emailAddress,
+        message: req.body.message
       });
 
       if (response?.status === 'ok') {
