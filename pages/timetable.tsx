@@ -2,6 +2,8 @@ import Head from "next/head";
 // import Link from "next/link";
 import { createClient } from 'contentful';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import Table from "@/components/ui/Table";
+import { classicNameResolver } from "typescript";
 
 export async function getStaticProps() {
   const client = createClient({
@@ -14,8 +16,6 @@ export async function getStaticProps() {
     client.getEntry('1PwB3wyGGtYQY0Rl5dxHS4')
   ]);
 
-  // console.log('timeTable', timeTable);
-  // console.log('contents', contents);
   console.log('created at:', contents.sys.createdAt);
 
   return {
@@ -95,41 +95,67 @@ function TimeTable({timeTable}: any) {
     ]
 }
 */
+
+const thStyle = 'p-1 md:p-3 border border-emerald-500 bg-emerald-500';
+const tdStyle = 'p-1 md:p-3 border border-emerald-500';
   return (
-    <table>
-      <thead>
-        <tr className="border border-black">
-          <th className="border border-black"></th>
-          <th className="border border-black">Mon</th>
-          <th className="border border-black">Tue</th>
-          <th className="border border-black">Wed</th>
-          <th className="border border-black">Thu</th>
-          <th className="border border-black">Fri</th>
-          <th className="border border-black">Sat</th>
-          <th className="border border-black">Sun</th>
-        </tr>
-      </thead>
-      <tbody>
-        {timeTable.map((time: any) => (
-          <tr key={time.startTime} className="border border-black">
-            <td className="border border-black">{time.startTime}</td>
-            <td className="border border-black">{time.monday}</td>
-            <td className="border border-black">{time.tuesday}</td>
-            <td className="border border-black">{time.wednesday}</td>
-            <td className="border border-black">{time.thursday}</td>
-            <td className="border border-black">{time.friday}</td>
-            <td className="border border-black">{time.saturday}</td>
-            <td className="border border-black">{time.sunday}</td>
+    <div className="shadow-lg shadow-teal-900 w-fit mx-auto sm:ml-6 sm:mr-0 rounded-xl overflow-hidden bg-gradient-to-b from-indigo-500 to-teal-800">
+      <table className="text-white text-left font-semibold">
+        <thead>
+          <tr>
+            <th className={thStyle + ' rounded-tl-md'}></th>
+            <th className={thStyle}>Mon</th>
+            <th className={thStyle}>Tue</th>
+            <th className={thStyle}>Wed</th>
+            <th className={thStyle}>Thu</th>
+            <th className={thStyle}>Fri</th>
+            <th className={thStyle}>Sat</th>
+            <th className={thStyle + ' rounded-tr-md'}>Sun</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {timeTable.map((time: any, index: number) => {
+            // const isLastRow = (index === timeTable.length - 1);
+            return (
+              <tr key={time.startTime}>
+                <td className={tdStyle + ' bg-emerald-500'}>{time.startTime}</td>
+                <td className={tdStyle}>{time.monday}</td>
+                <td className={tdStyle}>{time.tuesday}</td>
+                <td className={tdStyle}>{time.wednesday}</td>
+                <td className={tdStyle}>{time.thursday}</td>
+                <td className={tdStyle}>{time.friday}</td>
+                <td className={tdStyle}>{time.saturday}</td>
+                <td className={tdStyle}>{time.sunday}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
 export default function TimetablePage(props: any) {
-  // console.log('props.timeTable:', props.timeTable);
-  // console.log('props.content:', props.contents);
+
+  const data = [
+    // ["Start at", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    [
+      "Start at",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
+    ],
+    ["10:00", "Hot 90", "", "Hot 90", "", "", "", "Hot 90"],
+    ["12:15", "", "", "", "", "Hot 60", "Hot 60", ""],
+    ["17:00", "", "", "", "", "", "", "Hot 90"],
+    ["18:15", "Hot 90", "Hot 90", "Hot 90", "Hot 90", "", "", ""],
+    ["19:00", "", "", "", "", "Hot 60", "", ""],
+    ["20:15", "Hot 60", "Absolute + Yin 90 min", "Hot 90", "Hot 90", "", "", ""]
+  ];  
 
   return (
     <>
@@ -144,10 +170,24 @@ export default function TimetablePage(props: any) {
       </Head>
 
       {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
-      <main className="bg-white prose">
+      <main>
         {/* Note: the following markdown contains an anchor tag */}
-        {documentToReactComponents(props.contents)}
+        <div className="bg-white prose">
+          {documentToReactComponents(props.contents)}
+        </div>
+
+        {/* Own table */}
         <TimeTable timeTable={props.timeTable} />
+
+        {/* "TailwindUI" table */}
+        {/* <div className="hidden sm:block"> */}
+          <Table 
+            data={data} 
+            // title={'table title'} 
+            // description={'table description'} 
+          />
+        {/* </div> */}
+        <p>-</p>
       </main>
     </>
   );
