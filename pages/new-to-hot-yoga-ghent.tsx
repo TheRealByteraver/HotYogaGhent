@@ -1,18 +1,19 @@
 import Head from "next/head";
-import { createClient } from 'contentful';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { createClient } from "contentful";
+import MainNavigation from "@/components/MainNavigation";
+import RichTextWrapper from "@/components/ui/RichTextWrapper";
 
 export async function getStaticProps() {
   const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || '',
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+    space: process.env.CONTENTFUL_SPACE_ID || "",
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
   });
-  
-  const res: any = await client.getEntry('4buPM5IDcrk3byRf2Ph5Tn');
+
+  const res: any = await client.getEntry("4buPM5IDcrk3byRf2Ph5Tn");
   const { pageTitle, contents } = res.fields;
-  
+
   return {
-    props: { 
+    props: {
       pageTitle,
       contents,
     },
@@ -20,7 +21,14 @@ export async function getStaticProps() {
   };
 }
 
-export default function NewToHotYogaGhent({pageTitle, contents}: {pageTitle: String, contents: any}) {
+export default function NewToHotYogaGhent({
+  pageTitle,
+  contents,
+}: {
+  pageTitle: String;
+  contents: any;
+}) {
+
   return (
     <>
       <Head>
@@ -33,10 +41,13 @@ export default function NewToHotYogaGhent({pageTitle, contents}: {pageTitle: Str
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
-      <main className="bg-white prose">
-
-        {documentToReactComponents(contents)}
+      <MainNavigation />
+      <main>
+        
+        <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
+          <RichTextWrapper contents={contents} />
+          <div className="h-screen"></div>
+        </div>
       </main>
     </>
   );

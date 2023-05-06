@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { createClient } from 'contentful';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import MainNavigation from "@/components/MainNavigation";
+import RichTextWrapper from "@/components/ui/RichTextWrapper";
 
 export async function getStaticProps() {
   const client = createClient({
@@ -33,10 +35,13 @@ export default function Yoga({pageTitle, contents}: {pageTitle: String, contents
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
-      <main className="bg-white prose">
-        {documentToReactComponents(contents)}
-      </main>
+      <MainNavigation />
+      <main>
+        <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
+          <RichTextWrapper contents={contents} />
+          <div className="h-screen"></div>
+        </div>
+      </main>      
     </>
   );
 }

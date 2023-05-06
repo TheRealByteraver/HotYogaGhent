@@ -1,34 +1,36 @@
 import Head from "next/head";
 // import Link from "next/link";
-import { createClient } from 'contentful';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { createClient } from "contentful";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Table from "@/components/ui/Table";
 import { classicNameResolver } from "typescript";
+import MainNavigation from "@/components/MainNavigation";
+import RichTextWrapper from "@/components/ui/RichTextWrapper";
 
 export async function getStaticProps() {
   const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || '',
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+    space: process.env.CONTENTFUL_SPACE_ID || "",
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
   });
-  
+
   const [timeTable, contents]: any = await Promise.all([
-    client.getEntry('62EcBCKVbl1rdtyNsPSzLv'),
-    client.getEntry('1PwB3wyGGtYQY0Rl5dxHS4')
+    client.getEntry("62EcBCKVbl1rdtyNsPSzLv"),
+    client.getEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
   ]);
 
-  console.log('created at:', contents.sys.createdAt);
+  console.log("created at:", contents.sys.createdAt);
 
   return {
-    props: { 
+    props: {
       timeTable: timeTable.fields.timetableData.timeTable,
-      contents: contents.fields.contents
+      contents: contents.fields.contents,
     },
     // revalidate: 10,  // revalidate at most every 10 seconds
   };
 }
 
-function TimeTable({timeTable}: any) {
-/* 
+function TimeTable({ timeTable }: any) {
+  /* 
   timeTable format is like so:
   const json = {
     "timeTable": [
@@ -96,36 +98,69 @@ function TimeTable({timeTable}: any) {
 }
 */
 
-const thStyle = 'p-1 md:p-3 border border-emerald-500 bg-emerald-500';
-const tdStyle = 'p-1 md:p-3 border border-emerald-500';
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  let dayIndex = new Date().getDay();
+
+  // convert to monday as first day of the week:
+  dayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+
+  const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
+  const tdStyle = "p-1 md:p-3 border-b border-emerald-500 ";
+
   return (
-    <div className="shadow-lg shadow-teal-900 w-fit mx-auto sm:ml-6 sm:mr-0 rounded-xl overflow-hidden bg-gradient-to-b from-indigo-500 to-teal-800">
+    <div className="border border-emerald-500 w-fit rounded-xl overflow-hidden shadow-lg shadow-teal-900 bg-gradient-to-b from-indigo-500 to-teal-800">
       <table className="text-white text-left font-semibold">
         <thead>
           <tr>
-            <th className={thStyle + ' rounded-tl-md'}></th>
-            <th className={thStyle}>Mon</th>
-            <th className={thStyle}>Tue</th>
-            <th className={thStyle}>Wed</th>
-            <th className={thStyle}>Thu</th>
-            <th className={thStyle}>Fri</th>
-            <th className={thStyle}>Sat</th>
-            <th className={thStyle + ' rounded-tr-md'}>Sun</th>
+            <th className={thStyle + " bg-emerald-500 rounded-tl-md"}></th>
+            {weekDays.map((day, dayIdx) => (
+              <th
+                key={day}
+                className={
+                  thStyle +
+                  (dayIdx === dayIndex
+                    ? " bg-teal-300 text-gray-600"
+                    : " bg-emerald-500") +
+                  (dayIdx < 6 ? " " : " rounded-tr-md")
+                }
+              >
+                {day}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {timeTable.map((time: any, index: number) => {
-            // const isLastRow = (index === timeTable.length - 1);
+            const isLastRow = index === timeTable.length - 1;
+            const times = [
+              time.monday,
+              time.tuesday,
+              time.wednesday,
+              time.thursday,
+              time.friday,
+              time.saturday,
+              time.sunday,
+            ];
             return (
               <tr key={time.startTime}>
-                <td className={tdStyle + ' bg-emerald-500'}>{time.startTime}</td>
-                <td className={tdStyle}>{time.monday}</td>
-                <td className={tdStyle}>{time.tuesday}</td>
-                <td className={tdStyle}>{time.wednesday}</td>
-                <td className={tdStyle}>{time.thursday}</td>
-                <td className={tdStyle}>{time.friday}</td>
-                <td className={tdStyle}>{time.saturday}</td>
-                <td className={tdStyle}>{time.sunday}</td>
+                <td className={tdStyle + " bg-emerald-500"}>
+                  {time.startTime}
+                </td>
+                {weekDays.map((day, dayIdx) => (
+                  <td
+                    key={day}
+                    className={
+                      tdStyle +
+                      (dayIdx === dayIndex
+                        ? " bg-teal-300 text-gray-600"
+                        : " bg-transparent") +
+                      (dayIdx < 6 ? "" : " rounded-br-md") +
+                      (isLastRow ? " border-b-0" : "")
+                    }
+                  >
+                    {times[dayIdx]}
+                  </td>
+                ))}
               </tr>
             );
           })}
@@ -136,26 +171,25 @@ const tdStyle = 'p-1 md:p-3 border border-emerald-500';
 }
 
 export default function TimetablePage(props: any) {
-
-  const data = [
-    // ["Start at", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-    [
-      "Start at",
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri",
-      "Sat",
-      "Sun",
-    ],
-    ["10:00", "Hot 90", "", "Hot 90", "", "", "", "Hot 90"],
-    ["12:15", "", "", "", "", "Hot 60", "Hot 60", ""],
-    ["17:00", "", "", "", "", "", "", "Hot 90"],
-    ["18:15", "Hot 90", "Hot 90", "Hot 90", "Hot 90", "", "", ""],
-    ["19:00", "", "", "", "", "Hot 60", "", ""],
-    ["20:15", "Hot 60", "Absolute + Yin 90 min", "Hot 90", "Hot 90", "", "", ""]
-  ];  
+  // const data = [
+  //   // ["Start at", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  //   ["Start at", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  //   ["10:00", "Hot 90", "", "Hot 90", "", "", "", "Hot 90"],
+  //   ["12:15", "", "", "", "", "Hot 60", "Hot 60", ""],
+  //   ["17:00", "", "", "", "", "", "", "Hot 90"],
+  //   ["18:15", "Hot 90", "Hot 90", "Hot 90", "Hot 90", "", "", ""],
+  //   ["19:00", "", "", "", "", "Hot 60", "", ""],
+  //   [
+  //     "20:15",
+  //     "Hot 60",
+  //     "Absolute + Yin 90 min",
+  //     "Hot 90",
+  //     "Hot 90",
+  //     "",
+  //     "",
+  //     "",
+  //   ],
+  // ];
 
   return (
     <>
@@ -169,25 +203,30 @@ export default function TimetablePage(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin */}
       <main>
-        {/* Note: the following markdown contains an anchor tag */}
-        <div className="bg-white prose">
-          {documentToReactComponents(props.contents)}
+        <MainNavigation />
+
+        <div className="h-fit w-full pt-10 bg-emerald-900">
+          <div className="w-fit block mx-auto sm:ml-4 md:ml-10">
+            <TimeTable timeTable={props.timeTable} />
+          </div>
         </div>
 
-        {/* Own table */}
-        <TimeTable timeTable={props.timeTable} />
+        {/* Note: the following markdown contains an anchor tag */}
+        <div className="h-fit w-full bg-emerald-900 pt-4 sm:p-2 md:p-10">
+          <RichTextWrapper contents={props.contents} />
+        </div>
 
         {/* "TailwindUI" table */}
         {/* <div className="hidden sm:block"> */}
-          <Table 
-            data={data} 
-            // title={'table title'} 
-            // description={'table description'} 
-          />
+        {/* <Table 
+          data={data} 
+          // title={'table title'} 
+          // description={'table description'} 
+        /> */}
         {/* </div> */}
-        <p>-</p>
+
+        <div className="h-screen bg-emerald-900"></div>
       </main>
     </>
   );
