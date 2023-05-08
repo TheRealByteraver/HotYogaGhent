@@ -6,6 +6,7 @@ import Table from "@/components/ui/Table";
 import { classicNameResolver } from "typescript";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
+import { useEffect, useState } from "react";
 
 // getStaticProps() runs at *build time only*, server side
 /* 
@@ -61,7 +62,9 @@ export async function getStaticProps() {
     client.getEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
   ]);
 
-  console.log("created at (minor change here):", contents.sys.createdAt);
+  console.log('revalidating timetable page, new content loaded from api:', timeTable.fields.timetableData.timeTable);
+
+  // console.log("created at (minor change here):", contents.sys.createdAt);
 
   return {
     props: {
@@ -142,32 +145,41 @@ function TimeTable({ timeTable }: any) {
 */
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
   let dayIndex = new Date().getDay();
 
   // convert to monday as first day of the week:
   dayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+
+  const [day, setDay] = useState(dayIndex);
+  const [time, setTime] = useState((new Date).getUTCSeconds());
+
+  // useEffect(() => {
+  // }, []);
+
 
   const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
   const tdStyle = "p-1 md:p-3 border-b border-emerald-500 ";
 
   return (
     <div className="border border-emerald-500 w-fit rounded-xl overflow-hidden shadow-lg shadow-teal-900 bg-gradient-to-b from-indigo-500 to-teal-800">
+      <p>current time (debug): {time}</p>
       <table className="text-white text-left font-semibold">
         <thead>
           <tr>
             <th className={thStyle + " bg-emerald-500 rounded-tl-md"}></th>
-            {weekDays.map((day, dayIdx) => (
+            {weekDays.map((dayStr, dayIdx) => (
               <th
-                key={day}
+                key={dayStr}
                 className={
                   thStyle +
-                  (dayIdx === dayIndex
+                  (dayIdx === day
                     ? " bg-teal-300 text-gray-600"
                     : " bg-emerald-500") +
                   (dayIdx < 6 ? " " : " rounded-tr-md")
                 }
               >
-                {day}
+                {dayStr}
               </th>
             ))}
           </tr>
@@ -189,12 +201,12 @@ function TimeTable({ timeTable }: any) {
                 <td className={tdStyle + " bg-emerald-500"}>
                   {time.startTime}
                 </td>
-                {weekDays.map((day, dayIdx) => (
+                {weekDays.map((dayStr, dayIdx) => (
                   <td
-                    key={day}
+                    key={dayStr}
                     className={
                       tdStyle +
-                      (dayIdx === dayIndex
+                      (dayIdx === day
                         ? " bg-teal-300 text-gray-600"
                         : " bg-transparent") +
                       (dayIdx < 6 ? "" : " rounded-br-md") +
