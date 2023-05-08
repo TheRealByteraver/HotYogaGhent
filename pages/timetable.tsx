@@ -152,10 +152,11 @@ function TimeTable({ timeTable }: any) {
   dayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
 
   const [day, setDay] = useState(dayIndex);
-  const [time, setTime] = useState((new Date).getUTCSeconds());
+  const [time, setTime] = useState(0);
 
-  // useEffect(() => {
-  // }, []);
+  useEffect(() => {
+    setTime((new Date).getUTCSeconds());
+  }, []);
 
 
   const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
