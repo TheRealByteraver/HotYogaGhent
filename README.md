@@ -44,5 +44,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - link to newest blog
 - link to newest event
 
+## Ideas: 
+- display on the main page when the next two classes are scheduled
+- display on the main page when the next event is scheduled
 
-Welcome to 
+## Todo:
+- fix contact form (validation)
+- fix active day in timeTable (static now)
+- implement Contentful webhook: site should update on Contentful changes
+- Add hot yoga events in Contentful
+- Fix Events page

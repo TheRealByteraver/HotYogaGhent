@@ -7,6 +7,49 @@ import { classicNameResolver } from "typescript";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 
+// getStaticProps() runs at *build time only*, server side
+/* 
+  res.revalidate('/blog/post-1') // regenerate page
+
+  On demand revalidation:
+
+  First, create a secret token only known by your Next.js app. This secret will 
+  be used to prevent unauthorized access to the revalidation API Route. You can 
+  access the route (either manually or with a webhook) with the following URL 
+  structure:  
+
+  https://<your-site.com>/api/revalidate?secret=<token>
+
+  Next, add the secret as an Environment Variable to your application. Finally, 
+  create the revalidation API Route:
+
+  file pages/api/revalidate:
+
+export default async function handler(req, res) {
+  // Check for secret to confirm this is a valid request
+  if (req.query.secret !== process.env.MY_SECRET_TOKEN) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+ 
+  try {
+    // this should be the actual path not a rewritten path
+    // e.g. for "/blog/[slug]" this should be "/blog/post-1"
+    await res.revalidate('/path-to-revalidate');
+    return res.json({ revalidated: true });
+  } catch (err) {
+    // If there was an error, Next.js will continue
+    // to show the last successfully generated page
+    return res.status(500).send('Error revalidating');
+  }
+}  
+
+  To test on-demand regeneration: use the production build:
+  In the cli, run the commands:
+
+  next build
+  next start  
+
+*/
 export async function getStaticProps() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID || "",
@@ -18,7 +61,7 @@ export async function getStaticProps() {
     client.getEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
   ]);
 
-  console.log("created at:", contents.sys.createdAt);
+  console.log("created at (minor change here):", contents.sys.createdAt);
 
   return {
     props: {

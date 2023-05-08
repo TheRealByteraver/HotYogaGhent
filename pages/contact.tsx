@@ -20,7 +20,7 @@ type ContactFormInputs = {
 };
 
 async function sendMail(emailData: ContactFormInputs) {
-  const response = await fetch('/api/hello', {
+  const response = await fetch('/api/sendMessage', {
     method: "POST", 
     // mode: "same-origin", 
     // cache: "no-cache", 
