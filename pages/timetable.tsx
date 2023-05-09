@@ -154,7 +154,7 @@ function TimeTable({ timeTable }: any) {
     today = today === 0 ? 6 : today - 1;
 
     // force delay for debugging
-    const timer = setTimeout(() => { setDayIndex(today); }, 2000); 
+    const timer = setTimeout(() => { setDayIndex(today); }, 1); // debug delay temp. reduced to 1 ms
 
     // cleanup
     return () => clearTimeout(timer);
