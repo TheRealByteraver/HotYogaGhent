@@ -81,7 +81,7 @@ export default function Contact() {
           <h2>Send us a message</h2>
 
 
-          <form  onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full rounded-lg bg-teal-800 mt-4 p-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full rounded-lg bg-teal-800 mt-4 p-4">
             <Input {...register('fullName', { required: true })}
               placeholder='Enter your name here'
               label='Name'
@@ -97,11 +97,13 @@ export default function Contact() {
               label='Message' 
               error={errors.message} 
             />
-            <ReCAPTCHA
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-              onChange={onCaptchaChange}
-            />          
-            <button type="submit" disabled={!captchaValidated} className="border-2 border-red-400 rounded p-2 mt-2 w-40">Send Message</button>
+            <div className="mt-4">
+              <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                onChange={onCaptchaChange}
+              />          
+            </div>
+            <button type="submit" disabled={!captchaValidated} className="mt-4 w-40 border border-white bg-teal-600 rounded p-2">Send Message</button>
           </form>
 
           <div className="h-screen"></div>

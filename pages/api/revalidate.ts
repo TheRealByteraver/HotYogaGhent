@@ -1,5 +1,7 @@
 // file pages/api/revalidate:
 
+// hooked as https://hot-yoga-ghent.vercel.app/api/revalidate
+
 export default async function handler(req: any, res: any) {
   const { method, query } = req;
   // if the name of this file was [hello].ts instead, and you would

@@ -145,39 +145,39 @@ function TimeTable({ timeTable }: any) {
 */
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-  let dayIndex = new Date().getDay();
-
-  // convert to monday as first day of the week:
-  dayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
-
-  const [day, setDay] = useState(dayIndex);
-  const [time, setTime] = useState(0);
+  const [dayIndex, setDayIndex] = useState(-1);
 
   useEffect(() => {
-    setTime((new Date).getUTCSeconds());
-  }, []);
+    let today = new Date().getDay();
 
+    // convert to monday as first day of the week:
+    today = today === 0 ? 6 : today - 1;
+
+    // force delay for debugging
+    const timer = setTimeout(() => { setDayIndex(today); }, 2000); 
+
+    // cleanup
+    return () => clearTimeout(timer);
+  }, []);
 
   const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
   const tdStyle = "p-1 md:p-3 border-b border-emerald-500 ";
 
   return (
     <div className="border border-emerald-500 w-fit rounded-xl overflow-hidden shadow-lg shadow-teal-900 bg-gradient-to-b from-indigo-500 to-teal-800">
-      <p>current time (debug): {time}</p>
       <table className="text-white text-left font-semibold">
         <thead>
           <tr>
             <th className={thStyle + " bg-emerald-500 rounded-tl-md"}></th>
-            {weekDays.map((dayStr, dayIdx) => (
+            {weekDays.map((dayStr, index) => (
               <th
                 key={dayStr}
                 className={
                   thStyle +
-                  (dayIdx === day
+                  (index === dayIndex
                     ? " bg-teal-300 text-gray-600"
                     : " bg-emerald-500") +
-                  (dayIdx < 6 ? " " : " rounded-tr-md")
+                  (index < 6 ? " " : " rounded-tr-md")
                 }
               >
                 {dayStr}
@@ -202,19 +202,19 @@ function TimeTable({ timeTable }: any) {
                 <td className={tdStyle + " bg-emerald-500"}>
                   {time.startTime}
                 </td>
-                {weekDays.map((dayStr, dayIdx) => (
+                {weekDays.map((dayStr, index) => (
                   <td
                     key={dayStr}
                     className={
                       tdStyle +
-                      (dayIdx === day
+                      (index === dayIndex
                         ? " bg-teal-300 text-gray-600"
                         : " bg-transparent") +
-                      (dayIdx < 6 ? "" : " rounded-br-md") +
+                      (index < 6 ? "" : " rounded-br-md") +
                       (isLastRow ? " border-b-0" : "")
                     }
                   >
-                    {times[dayIdx]}
+                    {times[index]}
                   </td>
                 ))}
               </tr>

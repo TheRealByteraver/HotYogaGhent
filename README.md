@@ -38,7 +38,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## Hot Yoga main page:
-
 - call to action
 - new to hot yoga ghent + "must reserve" warning
 - link to newest blog
@@ -47,10 +46,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Ideas: 
 - display on the main page when the next two classes are scheduled
 - display on the main page when the next event is scheduled
+- put a warning on the timetable page a week or two before the schedule changes (when summer holidays start for example)
 
 ## Todo:
+- stop browser caching on pages that can change (timetable etc)
+- replace own hamburger menu/ icon with tailwindui one
+- fix welcome page (link to contact form)
 - fix contact form (validation)
 - fix active day in timeTable (static now)
 - implement Contentful webhook: site should update on Contentful changes
 - Add hot yoga events in Contentful
 - Fix Events page
+- Upgrade the timetable page:
+  - automatically switch schedules during Gentse feesten & winter holidays
+  - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
