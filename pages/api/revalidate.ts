@@ -33,6 +33,7 @@ export default async function handler(req: any, res: any) {
       } catch (err) {
         // If there was an error, Next.js will continue
         // to show the last successfully generated page
+        console.log("revalidation failed:", err);
         return res.status(500).send("Error revalidating");
       }
       break;

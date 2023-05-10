@@ -49,6 +49,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - put a warning on the timetable page a week or two before the schedule changes (when summer holidays start for example)
 
 ## Todo:
+- implement swipe left/right navigation on mobile
 - look into sitemap feature
 - stop browser caching on pages that can change (timetable etc)
 - replace own hamburger menu/ icon with tailwindui one

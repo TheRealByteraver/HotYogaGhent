@@ -64,7 +64,7 @@ export async function getStaticProps() {
 
   console.log('revalidating timetable page, new content loaded from api:', timeTable.fields.timetableData.timeTable);
 
-  // console.log("created at (minor change here):", contents.sys.createdAt);
+  // console.log("created at:", contents.sys.createdAt);
 
   return {
     props: {
@@ -154,10 +154,12 @@ function TimeTable({ timeTable }: any) {
     today = today === 0 ? 6 : today - 1;
 
     // force delay for debugging
-    const timer = setTimeout(() => { setDayIndex(today); }, 1); // debug delay temp. reduced to 1 ms
+    // const timer = setTimeout(() => { 
+      setDayIndex(today); 
+    // }, 1); // debug delay temp. reduced to 1 ms
 
     // cleanup
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, []);
 
   const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
