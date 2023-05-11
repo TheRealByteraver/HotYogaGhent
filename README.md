@@ -54,15 +54,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - implement swipe left/right navigation on mobile
 - replace own hamburger menu/ icon with tailwindui one
 - fix welcome page (link to contact form)
-- fix contact form (validation)
-- implement Contentful webhook: site should update on Contentful changes
 - Add hot yoga events in Contentful
 - Fix Events page
 - Upgrade the timetable page:
   - automatically switch schedules during Gentse feesten & winter holidays
   - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
+- Add Instagram & Facebook links on every page (footer)
+- add blog feature
 
 ## Done:
 - look into sitemap feature -> basic version is present in /pages/sitemap.xml.tsx
 - stop browser caching on pages that can change (timetable etc) -> pages already have correct headers but user must refresh
 - fix active day in timeTable (static now) -> fixed using useEffect(), ok
+- fix contact form (validation)
+- implement Contentful webhook: site should update on Contentful changes

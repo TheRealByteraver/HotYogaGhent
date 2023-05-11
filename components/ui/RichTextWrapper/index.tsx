@@ -1,5 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
+import Image from "next/image";
 
 // remove <p> tags inside <li>: Contentful wraps the contents of every <li> in a <p> :(
 export default function RichTextWrapper(props: any) {
@@ -12,9 +13,19 @@ export default function RichTextWrapper(props: any) {
             [BLOCKS.LIST_ITEM]: (node, children) => children,
           },
         });
-
         return <li>{UnTaggedChildren}</li>;
       },
+      [BLOCKS.EMBEDDED_ASSET]: (node: any) => (
+        <div className="border rounded overflow-hidden w-fit">
+          <Image
+            className="m-0"
+            src={"https:" + node.data?.target?.fields?.file?.url}
+            alt={node.data?.target?.fields?.title}
+            width={node.data?.target?.fields?.file?.details?.image?.width}
+            height={node.data?.target?.fields?.file?.details?.image?.height}
+          />
+        </div>
+      ),
     },
   };
 
