@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-const Input = forwardRef(function Input(props: any, ref) {
+const TextArea = forwardRef(function TextArea(props: any, ref) {
   return (
     <div>
       <label className="text-white text-sm font-medium inline-block mt-4 mb-1">
@@ -12,8 +12,8 @@ const Input = forwardRef(function Input(props: any, ref) {
         </p>
       )}
 
-      <input
-        className={`border outline-none bg-emerald-800 w-full h-10 my-2 mt-0 rounded p-2 hover:cursor-pointer
+      <textarea
+        className={`border outline-none bg-emerald-800 w-full my-2 mt-0 rounded p-2 hover:cursor-pointer
                     ${
                       props.error
                         ? "border-[#ed3548]"
@@ -24,9 +24,9 @@ const Input = forwardRef(function Input(props: any, ref) {
         {...props}
       >
         {props.children}
-      </input>
+      </textarea>
     </div>
   );
 });
 
-export default Input;
+export default TextArea;

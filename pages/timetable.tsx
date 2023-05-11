@@ -9,6 +9,7 @@ import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { useEffect, useState } from "react";
 
 // getStaticProps() runs at *build time only*, server side
+// question: https://github.com/orgs/vercel/discussions
 /* 
   res.revalidate('/blog/post-1') // regenerate page
 
@@ -156,7 +157,7 @@ function TimeTable({ timeTable }: any) {
     // force delay for debugging
     // const timer = setTimeout(() => { 
       setDayIndex(today); 
-    // }, 1); // debug delay temp. reduced to 1 ms
+    // }, 2000); 
 
     // cleanup
     // return () => clearTimeout(timer);

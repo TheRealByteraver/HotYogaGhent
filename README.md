@@ -43,19 +43,18 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - link to newest blog
 - link to newest event
 
-## Ideas: 
+## Ideas:
 - display on the main page when the next two classes are scheduled
 - display on the main page when the next event is scheduled
 - put a warning on the timetable page a week or two before the schedule changes (when summer holidays start for example)
+  --> "Sedert 2014 beginnen de Gentse Feesten op de vrijdag voor de derde zondag van juli, en eindigen ze op de zondag van de week erna."
+- Google maps insert on contact page?
 
 ## Todo:
 - implement swipe left/right navigation on mobile
-- look into sitemap feature
-- stop browser caching on pages that can change (timetable etc)
 - replace own hamburger menu/ icon with tailwindui one
 - fix welcome page (link to contact form)
 - fix contact form (validation)
-- fix active day in timeTable (static now)
 - implement Contentful webhook: site should update on Contentful changes
 - Add hot yoga events in Contentful
 - Fix Events page
@@ -63,5 +62,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
   - automatically switch schedules during Gentse feesten & winter holidays
   - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
 
-  ## Done:
-  - 
+## Done:
+- look into sitemap feature -> basic version is present in /pages/sitemap.xml.tsx
+- stop browser caching on pages that can change (timetable etc) -> pages already have correct headers but user must refresh
+- fix active day in timeTable (static now) -> fixed using useEffect(), ok

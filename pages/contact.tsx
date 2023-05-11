@@ -2,10 +2,13 @@ import Head from "next/head";
 import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 import Input from "@/components/ui/Input";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
+import TextArea from "@/components/ui/TextArea";
 
 /*
   To add: facebook link, instagram link, map with location, instructions for bike parking
@@ -33,11 +36,26 @@ async function sendMail(emailData: ContactFormInputs) {
   });
 
   console.log('response.status:', response.status);
-
 }
 
 export default function Contact() {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<ContactFormInputs>();
+  // custom error messages
+  const schema = yup.object().shape({
+    fullName: yup.string().required('The Name field is required'), 
+    emailAddress: yup.string().email('Your email address is not valid').required('An email address is required'),
+    message: yup.string().required('Please leave us a short message with your question'),
+  });  
+
+  const { register, handleSubmit, formState: { errors } } = useForm<ContactFormInputs>({
+    mode: 'onChange',
+    defaultValues: {
+      fullName: '',
+      emailAddress: '',
+      message: ''
+    },
+    resolver: yupResolver(schema)
+  });
+
   const [captchaValidated, setcaptchaValidated] = useState(false);
 
   function onCaptchaChange(value: any) {
@@ -92,8 +110,9 @@ export default function Contact() {
               label='Email Address'
               error={errors.emailAddress} 
             />
-            <Input {...register('message', { required: true })} 
+            <TextArea {...register('message', { required: true })} 
               placeholder='Type your message here'
+              rows={5}
               label='Message' 
               error={errors.message} 
             />
