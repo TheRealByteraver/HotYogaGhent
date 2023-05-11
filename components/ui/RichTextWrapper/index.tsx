@@ -1,8 +1,8 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 
+// remove <p> tags inside <li>: Contentful wraps the contents of every <li> in a <p> :(
 export default function RichTextWrapper(props: any) {
-  // remove <p> tags inside <li>: Contentful wraps the contents of every <li> in a <p> :(
   const renderOptions = {
     renderNode: {
       [BLOCKS.LIST_ITEM]: (node: any, children: any) => {

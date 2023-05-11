@@ -9,6 +9,7 @@ import Input from "@/components/ui/Input";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import TextArea from "@/components/ui/TextArea";
+import { createClient } from "contentful";
 
 /*
   To add: facebook link, instagram link, map with location, instructions for bike parking
@@ -38,7 +39,24 @@ async function sendMail(emailData: ContactFormInputs) {
   console.log('response.status:', response.status);
 }
 
-export default function Contact() {
+export async function getStaticProps() {
+  const client = createClient({
+    space: process.env.CONTENTFUL_SPACE_ID || '',
+    accessToken: process.env.CONTENTFUL_ACCESS_KEY || '',
+  });
+  
+  const res: any = await client.getEntry('3T7E5KfK0szuT3QTA1JiOT');
+  const { contents } = res.fields;
+  
+  return {
+    props: { 
+      contents
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+}
+
+export default function Contact({contents}: {contents: any}) {
   // custom error messages
   const schema = yup.object().shape({
     fullName: yup.string().required('The Name field is required'), 
@@ -85,9 +103,9 @@ export default function Contact() {
         <div className="h-fit w-full text-white bg-emerald-900 p-2 md:p-10">
 
 
-          {/* <RichTextWrapper contents={contents} /> */}
+          <RichTextWrapper contents={contents} />
 
-          <h1>Contact</h1>
+          {/* <h1>Contact</h1>
           <h2>Visit us</h2>
           <address>
             Hot Yoga Gent, Nederkouter 113A, 9000 Gent
@@ -96,7 +114,7 @@ export default function Contact() {
           <p>By phone: +32 (0)493 59 99 63</p>
           <p>By mail: hotyogagent@gmail.com</p>
           <p>On Facebook: Hot Yoga Gent</p>
-          <h2>Send us a message</h2>
+          <h2>Send us a message</h2> */}
 
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full rounded-lg bg-teal-800 mt-4 p-4">
