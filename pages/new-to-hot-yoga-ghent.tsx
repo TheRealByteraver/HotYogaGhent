@@ -28,7 +28,6 @@ export default function NewToHotYogaGhent({
   pageTitle: String;
   contents: any;
 }) {
-
   return (
     <>
       <Head>
@@ -41,14 +40,14 @@ export default function NewToHotYogaGhent({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MainNavigation />
-      <main>
-        
-        <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
-          <RichTextWrapper contents={contents} />
-          <div className="h-screen"></div>
-        </div>
-      </main>
+      <MainNavigation>
+        <main>
+          <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
+            <RichTextWrapper contents={contents} />
+            <div className="h-screen"></div>
+          </div>
+        </main>
+      </MainNavigation>
     </>
   );
 }

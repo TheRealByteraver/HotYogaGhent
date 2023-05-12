@@ -1,14 +1,23 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { BLOCKS } from "@contentful/rich-text-types";
+import { INLINES, BLOCKS } from "@contentful/rich-text-types";
 import Image from "next/image";
+import Link from "next/link";
 
-// remove <p> tags inside <li>: Contentful wraps the contents of every <li> in a <p> :(
 export default function RichTextWrapper(props: any) {
+
+  function replaceHyperLink(node: any, children: any) {
+    // console.log('link object:', node);
+    // this works, but ideally one should check if the link is to an external
+    // site, and if so render a simple <a> tag instead of a <Link> function.
+    return <Link href={node.data.uri}>{node.content[0].value}</Link>;
+  }
+
   const renderOptions = {
     renderNode: {
       [BLOCKS.LIST_ITEM]: (node: any, children: any) => {
         const UnTaggedChildren = documentToReactComponents(node, {
           renderNode: {
+            [INLINES.HYPERLINK]: replaceHyperLink,                        
             [BLOCKS.PARAGRAPH]: (node, children) => children,
             [BLOCKS.LIST_ITEM]: (node, children) => children,
           },
@@ -26,6 +35,16 @@ export default function RichTextWrapper(props: any) {
           />
         </div>
       ),
+      [INLINES.HYPERLINK]: replaceHyperLink,
+      // [INLINES.ENTRY_HYPERLINK]: (node: any) => (
+      //   <span>this entry hyperlink was replaced</span>
+      // ),
+      // [INLINES.ASSET_HYPERLINK]: (node: any) => (
+      //   <span>this asset hyperlink was replaced</span>
+      // ),
+      // [INLINES.EMBEDDED_ENTRY]: (node: any) => (
+      //   <span>this embedded entry was replaced</span>
+      // ),
     },
   };
 

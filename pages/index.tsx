@@ -6,6 +6,7 @@ import { createClient } from "contentful";
 
 import logo from "../public/images/logo.png";
 import Link from "next/link";
+import MainNavigation from "@/components/MainNavigation";
 
 export async function getStaticProps() {
   // Create the Contentful client
@@ -81,37 +82,37 @@ export default function Landing({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="h-screen text-white text-center bg-emerald-600 flex flex-col justify-between">
-        <div>
-          <h1 className="text-2xl py-5">
-            Welcome to {landingPageTitle}
-          </h1>
-          <p>Click on the logo to continue to the website...</p>
-        </div>
+      <MainNavigation>
+        <main className="h-screen text-white text-center bg-emerald-600 flex flex-col justify-between">
+          <div>
+            <h1 className="text-2xl py-5">Welcome to {landingPageTitle}</h1>
+            <p>Click on the logo to continue to the website...</p>
+          </div>
 
-        <Link className="block" href="/home">
-          <Image
-            className="block mx-auto border-2 border-lime-300"
-            src={logo}
-            alt=""
-            priority
-          />
-        </Link>
+          <Link className="block" href="/home">
+            <Image
+              className="block mx-auto border-2 border-lime-300"
+              src={logo}
+              alt=""
+              priority
+            />
+          </Link>
 
-        <p>...or go directly where you need to be:</p>
+          <p>...or go directly where you need to be:</p>
 
-        <div className="block w-full sm:static sm:w-fit sm:mx-auto">
-          {links.map((link, index) => (
-            <Link key={link.title} href={link.url}>
-              <div
-                className={`p-1.5 px-2 m-1 rounded border border-white text-white text-lg sm:inline-block sm:w-fit ${linkColors[index]}`}
-              >
-                {link.title}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </main>
+          <div className="block w-full sm:static sm:w-fit sm:mx-auto">
+            {links.map((link, index) => (
+              <Link key={link.title} href={link.url}>
+                <div
+                  className={`p-1.5 px-2 m-1 rounded border border-white text-white text-lg sm:inline-block sm:w-fit ${linkColors[index]}`}
+                >
+                  {link.title}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </main>
+      </MainNavigation>
     </>
   );
 }

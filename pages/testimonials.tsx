@@ -97,50 +97,52 @@ export default function Testimonials(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MainNavigation />
-      <main>
-        <div className="h-fit w-full text-white bg-emerald-900">
-          <h1 className="w-full text-center text-3xl pt-10 pb-4">Testimonials</h1>
-          
-          {/* testimonial group container */}
-          <ul className="w-full flex flex-row flex-wrap justify-around text-sm text-justify px-2 sm:px-4">
-            {props.testimonials.map((testimonial: any) => (
-              <li key={testimonial.id}>
+      <MainNavigation>
+        <main>
+          <div className="h-fit w-full text-white bg-emerald-900">
+            <h1 className="w-full text-center text-3xl pt-10 pb-4">
+              Testimonials
+            </h1>
 
-                {/* individual testimonial container */}
-                <div className="relative w-full h-fit mt-28 flex flex-col bg-teal-800 rounded-lg lg:mx-4 lg:w-[460px]">
+            {/* testimonial group container */}
+            <ul className="w-full flex flex-row flex-wrap justify-around text-sm text-justify px-2 sm:px-4">
+              {props.testimonials.map((testimonial: any) => (
+                <li key={testimonial.id}>
+                  {/* individual testimonial container */}
+                  <div className="relative w-full h-fit mt-28 flex flex-col bg-teal-800 rounded-lg lg:mx-4 lg:w-[460px]">
+                    {/* image container */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 aspect-square overflow-hidden rounded-full">
+                      <Image
+                        src={testimonial.avatarUrl}
+                        width={testimonial.avatarWidth}
+                        height={testimonial.avatarHeight}
+                        alt="author's portrait"
+                      />
+                    </div>
 
-                  {/* image container */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 aspect-square overflow-hidden rounded-full">
-                    <Image
-                      src={testimonial.avatarUrl}
-                      width={testimonial.avatarWidth}
-                      height={testimonial.avatarHeight}
-                      alt="author's portrait"
-                    />
+                    <div className="pt-16 pl-2">
+                      <p>
+                        <em>by {testimonial.author}</em>
+                      </p>
+                      <p>Posted on {testimonial.createdAt}</p>
+                    </div>
+
+                    <div className="mt-2 px-2">
+                      <hr />
+                    </div>
+
+                    <div className="w-full h-full p-2">
+                      {/* overflow-y-scroll */}
+                      <RichTextWrapper contents={testimonial.text} />
+                    </div>
                   </div>
-
-                  <div className="pt-16 pl-2">
-                    <p><em>by {testimonial.author}</em></p>
-                    <p>Posted on {testimonial.createdAt}</p>
-                  </div>
-
-                  <div className="mt-2 px-2">
-                    <hr />
-                  </div>
-
-                  <div className="w-full h-full p-2">
-                  {/* overflow-y-scroll */}
-                    <RichTextWrapper contents={testimonial.text} />
-                  </div>
-
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="h-screen bg-emerald-900"></div>
-      </main>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="h-screen bg-emerald-900"></div>
+        </main>
+      </MainNavigation>
     </>
   );
 }

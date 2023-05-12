@@ -72,7 +72,11 @@ function PriceTable({ priceTable }: any) {
                 <td className={cellStyle + lastRowMarkUp}>
                   {membershipLevel.description}
                 </td>
-                <td className={cellStyle + lastRowMarkUp + " bg-white bg-opacity-10"}>
+                <td
+                  className={
+                    cellStyle + lastRowMarkUp + " bg-white bg-opacity-10"
+                  }
+                >
                   {membershipLevel.price}
                 </td>
               </tr>
@@ -103,19 +107,20 @@ export default function Pricing({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MainNavigation />
-      <main>
-        <div className="h-fit w-full pt-10 bg-emerald-900">
-          <div className="w-fit block mx-auto sm:ml-4 md:ml-10">
-            <PriceTable priceTable={priceTable} />
+      <MainNavigation>
+        <main>
+          <div className="h-fit w-full pt-10 bg-emerald-900">
+            <div className="w-fit block mx-auto sm:ml-4 md:ml-10">
+              <PriceTable priceTable={priceTable} />
+            </div>
           </div>
-        </div>
 
-        <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
-          <RichTextWrapper contents={contents} />
-          <div className="h-screen"></div>
-        </div>
-      </main>
+          <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
+            <RichTextWrapper contents={contents} />
+            <div className="h-screen"></div>
+          </div>
+        </main>
+      </MainNavigation>
     </>
   );
 }

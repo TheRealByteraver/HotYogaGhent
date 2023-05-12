@@ -1,57 +1,12 @@
 import Head from "next/head";
-// import Link from "next/link";
 import { createClient } from "contentful";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Table from "@/components/ui/Table";
-import { classicNameResolver } from "typescript";
+// import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+// import Table from "@/components/ui/Table";
+// import { classicNameResolver } from "typescript";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { useEffect, useState } from "react";
 
-// getStaticProps() runs at *build time only*, server side
-// question: https://github.com/orgs/vercel/discussions
-/* 
-  res.revalidate('/blog/post-1') // regenerate page
-
-  On demand revalidation:
-
-  First, create a secret token only known by your Next.js app. This secret will 
-  be used to prevent unauthorized access to the revalidation API Route. You can 
-  access the route (either manually or with a webhook) with the following URL 
-  structure:  
-
-  https://<your-site.com>/api/revalidate?secret=<token>
-
-  Next, add the secret as an Environment Variable to your application. Finally, 
-  create the revalidation API Route:
-
-  file pages/api/revalidate:
-
-export default async function handler(req, res) {
-  // Check for secret to confirm this is a valid request
-  if (req.query.secret !== process.env.MY_SECRET_TOKEN) {
-    return res.status(401).json({ message: 'Invalid token' });
-  }
- 
-  try {
-    // this should be the actual path not a rewritten path
-    // e.g. for "/blog/[slug]" this should be "/blog/post-1"
-    await res.revalidate('/path-to-revalidate');
-    return res.json({ revalidated: true });
-  } catch (err) {
-    // If there was an error, Next.js will continue
-    // to show the last successfully generated page
-    return res.status(500).send('Error revalidating');
-  }
-}  
-
-  To test on-demand regeneration: use the production build:
-  In the cli, run the commands:
-
-  next build
-  next start  
-
-*/
 export async function getStaticProps() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID || "",
@@ -63,10 +18,6 @@ export async function getStaticProps() {
     client.getEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
   ]);
 
-  console.log('revalidating timetable page, new content loaded from api:', timeTable.fields.timetableData.timeTable);
-
-  // console.log("created at:", contents.sys.createdAt);
-
   return {
     props: {
       timeTable: timeTable.fields.timetableData.timeTable,
@@ -77,74 +28,6 @@ export async function getStaticProps() {
 }
 
 function TimeTable({ timeTable }: any) {
-  /* 
-  timeTable format is like so:
-  const json = {
-    "timeTable": [
-        {
-            "startTime": "10:00",
-            "monday"   : "Hot 90",
-            "tuesday"  : "",
-            "wednesday": "Hot 90",
-            "thursday" : "",
-            "friday"   : "",
-            "saturday" : "",
-            "sunday"   : "Hot 90"
-        },
-        {
-            "startTime": "12:15",
-            "monday"   : "",
-            "tuesday"  : "",
-            "wednesday": "",
-            "thursday" : "",
-            "friday"   : "Hot 60",
-            "saturday" : "Hot 60",
-            "sunday"   : ""
-        },
-        {
-            "startTime": "17:00",
-            "monday"   : "",
-            "tuesday"  : "",
-            "wednesday": "",
-            "thursday" : "",
-            "friday"   : "",
-            "saturday" : "",
-            "sunday"   : "Hot 90"
-        },
-        {
-            "startTime": "18:15",
-            "monday"   : "Hot 90",
-            "tuesday"  : "Hot 90",
-            "wednesday": "Hot 90",
-            "thursday" : "Hot 90",
-            "friday"   : "",
-            "saturday" : "",
-            "sunday"   : ""
-        },
-        {
-            "startTime": "19:00",
-            "monday"   : "",
-            "tuesday"  : "",
-            "wednesday": "",
-            "thursday" : "",
-            "friday"   : "Hot 60",
-            "saturday" : "",
-            "sunday"   : ""
-        },
-        {
-            "startTime": "20:15",
-            "monday"   : "Hot 60",
-            "tuesday"  : "Absolute + Yin 90 min",
-            "wednesday": "Hot 90",
-            "thursday" : "Hot 90",
-            "friday"   : "",
-            "saturday" : "",
-            "sunday"   : ""
-        }
-    ]
-}
-*/
-
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [dayIndex, setDayIndex] = useState(-1);
 
@@ -153,14 +36,7 @@ function TimeTable({ timeTable }: any) {
 
     // convert to monday as first day of the week:
     today = today === 0 ? 6 : today - 1;
-
-    // force delay for debugging
-    // const timer = setTimeout(() => { 
-      setDayIndex(today); 
-    // }, 2000); 
-
-    // cleanup
-    // return () => clearTimeout(timer);
+    setDayIndex(today);
   }, []);
 
   const thStyle = "p-1 md:p-3 border-b border-emerald-500 ";
@@ -230,26 +106,6 @@ function TimeTable({ timeTable }: any) {
 }
 
 export default function TimetablePage(props: any) {
-  // const data = [
-  //   // ["Start at", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-  //   ["Start at", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  //   ["10:00", "Hot 90", "", "Hot 90", "", "", "", "Hot 90"],
-  //   ["12:15", "", "", "", "", "Hot 60", "Hot 60", ""],
-  //   ["17:00", "", "", "", "", "", "", "Hot 90"],
-  //   ["18:15", "Hot 90", "Hot 90", "Hot 90", "Hot 90", "", "", ""],
-  //   ["19:00", "", "", "", "", "Hot 60", "", ""],
-  //   [
-  //     "20:15",
-  //     "Hot 60",
-  //     "Absolute + Yin 90 min",
-  //     "Hot 90",
-  //     "Hot 90",
-  //     "",
-  //     "",
-  //     "",
-  //   ],
-  // ];
-
   return (
     <>
       <Head>
@@ -262,31 +118,22 @@ export default function TimetablePage(props: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <MainNavigation />
-
-        <div className="h-fit w-full pt-10 bg-emerald-900">
-          <div className="w-fit block mx-auto sm:ml-4 md:ml-10">
-            <TimeTable timeTable={props.timeTable} />
+      <MainNavigation>
+        <main>
+          <div className="h-fit w-full pt-10 bg-emerald-900">
+            <div className="w-fit block mx-auto sm:ml-4 md:ml-10">
+              <TimeTable timeTable={props.timeTable} />
+            </div>
           </div>
-        </div>
 
-        {/* Note: the following markdown contains an anchor tag */}
-        <div className="h-fit w-full bg-emerald-900 pt-4 sm:p-2 md:p-10">
-          <RichTextWrapper contents={props.contents} />
-        </div>
+          {/* Note: the following markdown contains an anchor tag */}
+          <div className="h-fit w-full bg-emerald-900 pt-4 sm:p-2 md:p-10">
+            <RichTextWrapper contents={props.contents} />
+          </div>
 
-        {/* "TailwindUI" table */}
-        {/* <div className="hidden sm:block"> */}
-        {/* <Table 
-          data={data} 
-          // title={'table title'} 
-          // description={'table description'} 
-        /> */}
-        {/* </div> */}
-
-        <div className="h-screen bg-emerald-900"></div>
-      </main>
+          <div className="h-screen bg-emerald-900"></div>
+        </main>
+      </MainNavigation>
     </>
   );
 }
