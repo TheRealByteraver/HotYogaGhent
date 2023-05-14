@@ -9,17 +9,18 @@ import Input from "@/components/ui/Input";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import TextArea from "@/components/ui/TextArea";
-import { createClient } from "contentful";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
+import { getContentfulEntry } from "@/services/contentful/client";
 
-// same definition as in /pages/api/hello.ts
+// same definition as in /pages/api/sendMessage.ts ...
 type ContactFormInputs = {
   fullName: string;
   emailAddress: string;
   message: string;
 };
 
-async function sendMail(emailData: ContactFormInputs, callback: Function) {
+const sendMail = async (emailData: ContactFormInputs, callback: Function) => {
   const response = await fetch("/api/sendMessage", {
     method: "POST",
     headers: {
@@ -30,26 +31,9 @@ async function sendMail(emailData: ContactFormInputs, callback: Function) {
 
   console.log("response from api after sending message:", response.status);
   callback(response.status === 200);
-}
+};
 
-export async function getStaticProps() {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  const res: any = await client.getEntry("3T7E5KfK0szuT3QTA1JiOT");
-  const { contents } = res.fields;
-
-  return {
-    props: {
-      contents,
-    },
-    // revalidate: 10,  // revalidate at most every 10 seconds
-  };
-}
-
-export default function Contact({ contents }: { contents: any }) {
+const Contact = ({ contents }: { contents: any }) => {
   const router = useRouter();
 
   // custom error messages
@@ -81,20 +65,15 @@ export default function Contact({ contents }: { contents: any }) {
   const [captchaValidated, setCaptchaValidated] = useState(false);
 
   function onCaptchaChange(value: any) {
-    // if (value === true || value === false) {
-      setCaptchaValidated(!!value);
-    // } else {
-      console.log('value in onCaptchaChange was', value);
-    // } 
+    setCaptchaValidated(!!value); // force to boolean
   }
 
   const onSubmit: SubmitHandler<ContactFormInputs> = (data) => {
     if (captchaValidated) {
-      console.log('sending message :)');
-      // sendMail(data, (response: Boolean) => {
-      //   router.push(`/home?contact=${response ? 'success' : 'fail'}`);
-      // });
-      router.push(`/home?contact=${true ? 'success' : 'fail'}`); // temp
+      console.log("sending message :)");
+      sendMail(data, (response: boolean) => {
+        router.push(`/home?contact=${response ? "success" : "fail"}`);
+      });
     }
   };
 
@@ -143,11 +122,14 @@ export default function Contact({ contents }: { contents: any }) {
                 <ReCAPTCHA
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
                   onChange={onCaptchaChange}
-
-
-                  onExpired={() => { console.log('captcha expired'); }}
-                  onErrored={() => { console.log('captcha is in error state, prolly due to network error')}}
-
+                  onExpired={() => {
+                    console.log("captcha expired");
+                  }}
+                  onErrored={() => {
+                    console.log(
+                      "captcha is in error state, prolly due to network error"
+                    );
+                  }}
                 />
               </div>
               <button
@@ -163,4 +145,20 @@ export default function Contact({ contents }: { contents: any }) {
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const res: any = await getContentfulEntry("3T7E5KfK0szuT3QTA1JiOT");
+  const { contents } = res.fields;
+
+  return {
+    props: {
+      contents,
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default Contact;

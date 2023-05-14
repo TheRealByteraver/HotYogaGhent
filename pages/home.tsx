@@ -1,5 +1,6 @@
 import MainNavigation from "@/components/MainNavigation";
 import { getContentfulEntries } from "@/services/contentful/client";
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -88,7 +89,9 @@ const Home = (props: any) => {
                 key={value.order}
                 className="w-[340px] min-w-[340px] mx-3 mb-6 p-2 border rounded-xl border-stone-500"
               >
-                <div className="mx-auto w-fit h-10 p-2 underline">{value.title}</div>
+                <div className="mx-auto w-fit h-10 p-2 underline">
+                  {value.title}
+                </div>
                 <p>{value.valueText}</p>
               </div>
             ))}
@@ -102,7 +105,7 @@ const Home = (props: any) => {
   );
 };
 
-export async function getStaticProps() {
+const getStaticProps: GetStaticProps = async () => {
   const res: any = await getContentfulEntries({ content_type: "value" });
   const { items } = res;
 
@@ -118,6 +121,8 @@ export async function getStaticProps() {
     },
     // revalidate: 10,  // revalidate at most every 10 seconds
   };
-}
+};
+
+export { getStaticProps };
 
 export default Home;

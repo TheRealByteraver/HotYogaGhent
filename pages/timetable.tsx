@@ -1,33 +1,11 @@
 import Head from "next/head";
-import { createClient } from "contentful";
-// import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-// import Table from "@/components/ui/Table";
-// import { classicNameResolver } from "typescript";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { useEffect, useState } from "react";
+import { GetStaticProps } from "next";
+import { getContentfulEntry } from "@/services/contentful/client";
 
-export async function getStaticProps() {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  const [timeTable, contents]: any = await Promise.all([
-    client.getEntry("62EcBCKVbl1rdtyNsPSzLv"),
-    client.getEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
-  ]);
-
-  return {
-    props: {
-      timeTable: timeTable.fields.timetableData.timeTable,
-      contents: contents.fields.contents,
-    },
-    // revalidate: 10,  // revalidate at most every 10 seconds
-  };
-}
-
-function TimeTable({ timeTable }: any) {
+const TimeTable = ({ timeTable }: any) => {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [dayIndex, setDayIndex] = useState(-1);
 
@@ -103,13 +81,13 @@ function TimeTable({ timeTable }: any) {
       </table>
     </div>
   );
-}
+};
 
-export default function TimetablePage(props: any) {
+const TimetablePage = (props: any) => {
   return (
     <>
       <Head>
-        <title>Hot Yoga Ghent</title>
+        <title>Yoga class schedule</title>
         <meta
           name="description"
           content="Welcome to the website of Hot Yoga Ghent"
@@ -136,4 +114,23 @@ export default function TimetablePage(props: any) {
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const [timeTable, contents]: any = await Promise.all([
+    getContentfulEntry("62EcBCKVbl1rdtyNsPSzLv"),
+    getContentfulEntry("1PwB3wyGGtYQY0Rl5dxHS4"),
+  ]);
+
+  return {
+    props: {
+      timeTable: timeTable.fields.timetableData.timeTable,
+      contents: contents.fields.contents,
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default TimetablePage;

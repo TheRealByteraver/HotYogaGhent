@@ -1,41 +1,10 @@
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
-import { createClient } from "contentful";
+import { getContentfulEntries } from "@/services/contentful/client";
+import { GetStaticProps } from "next";
 import Head from "next/head";
 
-export async function getStaticProps() {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  const res: any = await client.getEntries({ content_type: "event" });
-  const { items } = res;
-
-  // https://stackoverflow.com/questions/19511597/how-to-get-address-location-from-latitude-and-longitude-in-google-map
-  // console.log('items:', items);
-  // console.log('item location:', items[0].fields.location);
-  // console.log('item description:', items[0].fields.description);
-  // console.log('items[0].fields.description.content[2].data:', items[0].fields.description.content[2].data);
-
-  return {
-    props: {
-      events: items.map((item: any) => ({
-        id: item.sys.id,
-        createdAt: new Date(item.sys.createdAt).getTime(),
-        createdAtString: new Date(item.sys.createdAt).toLocaleDateString(),
-        title: item.fields.title,
-        eventDate: new Date(item.fields.dateAndStartTime).toLocaleDateString(),
-        eventTime: new Date(item.fields.dateAndStartTime).toLocaleTimeString(),
-        location: item.fields.location,
-        contents: item.fields.description,
-      })),
-    },
-    // revalidate: 10,  // revalidate at most every 10 seconds
-  };
-}
-
-export default function Events({ events }: { events: any }) {
+const Events = ({ events }: { events: any }) => {
   return (
     <>
       <Head>
@@ -75,11 +44,37 @@ export default function Events({ events }: { events: any }) {
               );
             })}
 
-            {/* <RichTextWrapper contents={contents} /> */}
             <div className="h-screen"></div>
           </div>
         </main>
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const res: any = await getContentfulEntries({ content_type: "event" });
+  const { items } = res;
+
+  // https://stackoverflow.com/questions/19511597/how-to-get-address-location-from-latitude-and-longitude-in-google-map
+
+  return {
+    props: {
+      events: items.map((item: any) => ({
+        id: item.sys.id,
+        createdAt: new Date(item.sys.createdAt).getTime(),
+        createdAtString: new Date(item.sys.createdAt).toLocaleDateString(),
+        title: item.fields.title,
+        eventDate: new Date(item.fields.dateAndStartTime).toLocaleDateString(),
+        eventTime: new Date(item.fields.dateAndStartTime).toLocaleTimeString(),
+        location: item.fields.location,
+        contents: item.fields.description,
+      })),
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default Events;

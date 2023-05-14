@@ -51,24 +51,24 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Google maps insert on contact page?
 
 ## Todo:
-- getStaticProps onderaan
-- Use React Spring to animate things
+- implement webhooks for other pages
 - implement blog feature
 - fix "any" everywhere (typescript)
+
+- To add: map with location on contact page, instructions for bike parking
+- Use React Spring to animate things
 - implement nice font: alkatra ?
-- implement webhooks for other pages
-- implement swipe left/right navigation on mobile
-- contact page: add thank you message/ screen after message was sent!
 - replace own hamburger menu/ icon with tailwindui one
-- fix welcome page (link to contact form)
 - Upgrade the timetable page:
   - automatically switch schedules during Gentse feesten & winter holidays
   - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
 - Add Instagram & Facebook links on every page (footer)
-- add blog feature
-- To add: map with location on contact page, instructions for bike parking
 
 ## Done:
+- getStaticProps onderaan
+- fix welcome page (link to contact form)
+- contact page: add thank you message/ screen after message was sent!
+- implement swipe left/right navigation on mobile
 - put createClient function in separate file /services/contentful/client.ts
 - Get the "hot yoga ghent values" from contentful
 - Add hot yoga events in Contentful
@@ -78,5 +78,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - fix active day in timeTable (static now) -> fixed using useEffect(), ok
 - fix contact form (validation)
 - implement Contentful webhook: site should update on Contentful changes
-
 

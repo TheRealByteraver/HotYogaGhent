@@ -2,35 +2,14 @@
 
 import Head from "next/head";
 import Image from "next/image";
-import { createClient } from "contentful";
 
 import logo from "../public/images/logo.png";
 import Link from "next/link";
 import MainNavigation from "@/components/MainNavigation";
+import { GetStaticProps } from "next";
+import { getContentfulEntry } from "@/services/contentful/client";
 
-export async function getStaticProps() {
-  // Create the Contentful client
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  // the content_type is the _id_ from Contentful and can be found
-  // in the Contentful control panel
-  const res: any = await client.getEntry("5cZrlNAQHbQFIT7vDgtxt9");
-  const { landingPageTitle } = res.fields;
-
-  return {
-    props: { landingPageTitle },
-    // revalidate: 10, // regenerate the page at most every 10 seconds
-  };
-}
-
-export default function Landing({
-  landingPageTitle,
-}: {
-  landingPageTitle: String;
-}) {
+const Landing = ({ landingPageTitle }: { landingPageTitle: string }) => {
   const linkColors = [
     "bg-lime-500",
     "bg-green-500",
@@ -115,4 +94,18 @@ export default function Landing({
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const res: any = await getContentfulEntry("5cZrlNAQHbQFIT7vDgtxt9");
+  const { landingPageTitle } = res.fields;
+
+  return {
+    props: { landingPageTitle },
+    // revalidate: 10, // regenerate the page at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default Landing;

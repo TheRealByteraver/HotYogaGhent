@@ -1,33 +1,16 @@
 import Head from "next/head";
-import { createClient } from "contentful";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
+import { GetStaticProps } from "next";
+import { getContentfulEntry } from "@/services/contentful/client";
 
-export async function getStaticProps() {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  const res: any = await client.getEntry("4buPM5IDcrk3byRf2Ph5Tn");
-  const { pageTitle, contents } = res.fields;
-
-  return {
-    props: {
-      pageTitle,
-      contents,
-    },
-    // revalidate: 10,  // revalidate at most every 10 seconds
-  };
-}
-
-export default function NewToHotYogaGhent({
+const NewToHotYogaGhent = ({
   pageTitle,
   contents,
 }: {
-  pageTitle: String;
+  pageTitle: string;
   contents: any;
-}) {
+}) => {
   return (
     <>
       <Head>
@@ -50,4 +33,21 @@ export default function NewToHotYogaGhent({
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const res: any = await getContentfulEntry("4buPM5IDcrk3byRf2Ph5Tn");
+  const { pageTitle, contents } = res.fields;
+
+  return {
+    props: {
+      pageTitle,
+      contents,
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default NewToHotYogaGhent;

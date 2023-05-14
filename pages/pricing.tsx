@@ -1,57 +1,10 @@
 import Head from "next/head";
-import { createClient } from "contentful";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
+import { getContentfulEntry } from "@/services/contentful/client";
+import { GetStaticProps } from "next";
 
-export async function getStaticProps() {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID || "",
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY || "",
-  });
-
-  const [priceTable, contents]: any = await Promise.all([
-    client.getEntry("4MfYN5vANnKcdTCejiKpiF"),
-    client.getEntry("4XqknYjQoHimUAyL5iwn1O"),
-  ]);
-
-  // console.log('priceTable.fields.priceListData.priceList:', priceTable.fields.priceListData.priceList);
-
-  return {
-    props: {
-      priceTable: priceTable.fields.priceListData.priceList,
-      contents: contents.fields.contents,
-    },
-    // revalidate: 10,  // revalidate at most every 10 seconds
-  };
-}
-
-function PriceTable({ priceTable }: any) {
-  /* 
-{
-    "priceList": [
-        {
-            "description": "Come and try out the first week/ 8 days",
-            "price": "25 € *"
-        },
-        {
-            "description": "Drop in",
-            "price": "20 €"
-        },
-        {
-            "description": "Month card",
-            "price": "90/120 € **"
-        },
-        {
-            "description": "10 classes card",
-            "price": "130/160 € **"
-        },
-        {
-            "description": "Year card",
-            "price": "950 €"
-        }
-    ]
-}
-*/
+const PriceTable = ({ priceTable }: any) => {
   const cellStyle = "p-1 md:p-3 border-b border-emerald-500 ";
 
   return (
@@ -86,19 +39,19 @@ function PriceTable({ priceTable }: any) {
       </table>
     </div>
   );
-}
+};
 
-export default function Pricing({
+const Pricing = ({
   priceTable,
   contents,
 }: {
   priceTable: any;
   contents: any;
-}) {
+}) => {
   return (
     <>
       <Head>
-        {/* <title>{pageTitle}</title> */}
+        <title>Pricing</title>
         <meta
           name="description"
           content="Welcome to the website of Hot Yoga Ghent"
@@ -123,4 +76,23 @@ export default function Pricing({
       </MainNavigation>
     </>
   );
-}
+};
+
+const getStaticProps: GetStaticProps = async () => {
+  const [priceTable, contents]: any = await Promise.all([
+    getContentfulEntry("4MfYN5vANnKcdTCejiKpiF"),
+    getContentfulEntry("4XqknYjQoHimUAyL5iwn1O"),
+  ]);
+
+  return {
+    props: {
+      priceTable: priceTable.fields.priceListData.priceList,
+      contents: contents.fields.contents,
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
+};
+
+export { getStaticProps };
+
+export default Pricing;
