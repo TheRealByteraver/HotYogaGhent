@@ -1,7 +1,50 @@
 import MainNavigation from "@/components/MainNavigation";
+import { getContentfulEntries } from "@/services/contentful/client";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-export default function Home() {
+const MessageModal = (props: any) => {
+  return (
+    <div className="absolute z-10 w-full h-full bg-gray-900 bg-opacity-70 flex flex-col flex-nowrap justify-center items-center">
+      <div className="border border-white rounded w-4/5 bg-emerald-900 bg-opacity-80 shadow shadow-emerald-900 text-white p-4">
+        <h2 className="text-3xl mt-2 mb-4 text-center">Thank you!</h2>
+        <p className="my-8 text-center leading-7">{props.message}</p>
+        <button
+          className="block mx-auto mt-3 mb-2 px-8 py-2 border-2 rounded border-white bg-teal-600"
+          onClick={() => {
+            props.close();
+          }}
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Home = (props: any) => {
+  const router = useRouter();
+  const [message, setMessage] = useState("");
+
+  // If we got redirected from the contact page, provide user with feedback
+  useEffect(() => {
+    // warning: router.query will be undefined initially (first render)
+    if (router.query?.contact) {
+      const msg = "" + router.query.contact; // force to string for typescript :s
+      setMessage(
+        msg === "success"
+          ? "Your message was sent successfully, you will get back from us shortly. Stay tuned!"
+          : "Unfortunately there was a problem sending your message, please try again later."
+      );
+    }
+  }, [router.query?.contact]);
+
+  const close = () => {
+    setMessage("");
+    router.replace("/home");
+  };
+
   return (
     <>
       <Head>
@@ -14,7 +57,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainNavigation>
-        <main className="bg-teal-600">
+        <main className="relative bg-teal-600">
+          {message !== "" && <MessageModal close={close} message={message} />}
           {/* picture placeholder */}
           <div className="w-full h-[440px]"></div>
 
@@ -37,40 +81,17 @@ export default function Home() {
           </div>
 
           {/* dark white banner with cards */}
-          <div className="w-full pt-8 bg-yellow-50 flex flex-row flex-wrap justify-around text-sm font-bold text-justify text-stone-500">
-            <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">
-              <div className="mx-auto w-10 h-10 m-2 bg-lime-500"></div>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae,
-                maiores? Molestias aut error ea doloremque.
-              </p>
-            </div>
 
-            <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">
-              <div className="mx-auto w-10 h-10 m-2 bg-lime-500"></div>
-              <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Itaque
-                magni ipsa possimus repudiandae non odit, praesentium rem quos
-                fugiat quis soluta aspernatur placeat sit, animi quas
-                exercitationem, illo neque consequuntur!
-              </p>
-            </div>
-
-            <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">
-              <div className="mx-auto w-10 h-10 m-2 bg-lime-500"></div>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae,
-                maiores? Molestias aut error ea doloremque.
-              </p>
-            </div>
-
-            <div className="w-[340px] min-w-[340px] mx-2 mb-7 border-2 border-red-500">
-              <div className="mx-auto w-10 h-10 m-2 bg-lime-500"></div>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae,
-                maiores? Molestias aut error ea doloremque.
-              </p>
-            </div>
+          <div className="w-full pt-8 bg-yellow-50 flex flex-row flex-wrap justify-center text-sm font-bold text-justify text-stone-500">
+            {props.values.map((value: any) => (
+              <div
+                key={value.order}
+                className="w-[340px] min-w-[340px] mx-3 mb-6 p-2 border rounded-xl border-stone-500"
+              >
+                <div className="mx-auto w-fit h-10 p-2 underline">{value.title}</div>
+                <p>{value.valueText}</p>
+              </div>
+            ))}
           </div>
 
           {/* lime bottom banner with mandala's */}
@@ -79,4 +100,24 @@ export default function Home() {
       </MainNavigation>
     </>
   );
+};
+
+export async function getStaticProps() {
+  const res: any = await getContentfulEntries({ content_type: "value" });
+  const { items } = res;
+
+  return {
+    props: {
+      values: items
+        .map((item: any) => ({
+          order: item.fields.order,
+          title: item.fields.valueTitle,
+          valueText: item.fields.valueText,
+        }))
+        .sort((a: any, b: any) => +a.order - +b.order),
+    },
+    // revalidate: 10,  // revalidate at most every 10 seconds
+  };
 }
+
+export default Home;

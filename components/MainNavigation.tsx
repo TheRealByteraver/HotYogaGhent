@@ -2,8 +2,6 @@ import Link from "next/link";
 import { useState } from "react";
 import useSwipe from "@/hooks/useSwipe";
 
-// fonts: alkatra
-
 // hidden from width of 768px
 function HamBurgerIcon(props: any) {
   return (
@@ -110,7 +108,7 @@ function Menu(props: any) {
 }
 
 function MainNavigation(props: any) {
-  const [dropDownIsVisible, setDropDownIsVisible] = useState(false);
+  // const [dropDownIsVisible, setDropDownIsVisible] = useState(false);
 
   const swipeHandlers = useSwipe({
     onSwipedLeft: () => console.log("left"),
@@ -118,7 +116,7 @@ function MainNavigation(props: any) {
   });
 
   return (
-    <div {...swipeHandlers} className="border border-red-600">
+    <div {...swipeHandlers} className="">
       <nav>
         <div className="relative h-14 flex bg-gradient-to-r from-emerald-500 to-lime-400">
           <div className="h-full grow hidden md:inline-block">

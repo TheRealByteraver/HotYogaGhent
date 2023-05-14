@@ -10,11 +10,7 @@ import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import TextArea from "@/components/ui/TextArea";
 import { createClient } from "contentful";
-
-/*
-  To add: facebook link, instagram link, map with location, instructions for bike parking
-  sitemap ! nextjs feature
-*/
+import { useRouter } from "next/router";
 
 // same definition as in /pages/api/hello.ts
 type ContactFormInputs = {
@@ -23,20 +19,17 @@ type ContactFormInputs = {
   message: string;
 };
 
-async function sendMail(emailData: ContactFormInputs) {
+async function sendMail(emailData: ContactFormInputs, callback: Function) {
   const response = await fetch("/api/sendMessage", {
     method: "POST",
-    // mode: "same-origin",
-    // cache: "no-cache",
     headers: {
       "Content-Type": "application/json",
     },
-    // redirect: "follow", // manual, *follow, error
-    // referrerPolicy: "no-referrer",
     body: JSON.stringify(emailData),
   });
 
-  console.log("response.status:", response.status);
+  console.log("response from api after sending message:", response.status);
+  callback(response.status === 200);
 }
 
 export async function getStaticProps() {
@@ -57,6 +50,8 @@ export async function getStaticProps() {
 }
 
 export default function Contact({ contents }: { contents: any }) {
+  const router = useRouter();
+
   // custom error messages
   const schema = yup.object().shape({
     fullName: yup.string().required("The Name field is required"),
@@ -83,15 +78,23 @@ export default function Contact({ contents }: { contents: any }) {
     resolver: yupResolver(schema),
   });
 
-  const [captchaValidated, setcaptchaValidated] = useState(false);
+  const [captchaValidated, setCaptchaValidated] = useState(false);
 
   function onCaptchaChange(value: any) {
-    setcaptchaValidated(value);
+    // if (value === true || value === false) {
+      setCaptchaValidated(!!value);
+    // } else {
+      console.log('value in onCaptchaChange was', value);
+    // } 
   }
 
   const onSubmit: SubmitHandler<ContactFormInputs> = (data) => {
     if (captchaValidated) {
-      sendMail(data);
+      console.log('sending message :)');
+      // sendMail(data, (response: Boolean) => {
+      //   router.push(`/home?contact=${response ? 'success' : 'fail'}`);
+      // });
+      router.push(`/home?contact=${true ? 'success' : 'fail'}`); // temp
     }
   };
 
@@ -108,7 +111,8 @@ export default function Contact({ contents }: { contents: any }) {
       </Head>
 
       <MainNavigation>
-        <main>
+        <main className="relative">
+          {/* <MessageSentModal message="hello" /> */}
           <div className="h-fit w-full text-white bg-emerald-900 p-2 md:p-10">
             <RichTextWrapper contents={contents} />
 
@@ -139,6 +143,11 @@ export default function Contact({ contents }: { contents: any }) {
                 <ReCAPTCHA
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
                   onChange={onCaptchaChange}
+
+
+                  onExpired={() => { console.log('captcha expired'); }}
+                  onErrored={() => { console.log('captcha is in error state, prolly due to network error')}}
+
                 />
               </div>
               <button
@@ -149,8 +158,6 @@ export default function Contact({ contents }: { contents: any }) {
                 Send Message
               </button>
             </form>
-
-            <div className="h-screen"></div>
           </div>
         </main>
       </MainNavigation>
