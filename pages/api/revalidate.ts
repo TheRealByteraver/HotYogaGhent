@@ -92,7 +92,7 @@ export default async function handler(req: any, res: any) {
         // this should be the actual path not a rewritten path
         // e.g. for "/blog/[slug]" this should be "/blog/post-1"
         await res.revalidate(`/${query.page}`);
-        await setTimeout(10000); // let Vercel breathe a bit
+        // await setTimeout(1000); // let Vercel breathe a bit
         await res.revalidate(`${page}`);
 
         return res.json({ revalidated: true });
