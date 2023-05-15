@@ -36,7 +36,7 @@ export default async function handler(req: any, res: any) {
           "testimonials",
           "events",
           "contact",
-          // "blog",
+          "blog",
         ].includes(query.page) 
         // || !query.page.startsWith("blog/")
       ) {
@@ -84,7 +84,9 @@ export default async function handler(req: any, res: any) {
       //   blogBody: { 'en-US': [Object] }
       // }      
 
-      const page = `/${query.page}/${req.body.fields.slug['en-US']}`;
+      const page = `/${query.page}/${req.body?.fields?.slug['en-US']}`;
+
+      // console.log('page = ', page);
 
       try {
         console.log(`Starting regeneration of page ${page}`);
@@ -93,7 +95,7 @@ export default async function handler(req: any, res: any) {
         // e.g. for "/blog/[slug]" this should be "/blog/post-1"
         await res.revalidate(`/${query.page}`);
         // await setTimeout(1000); // let Vercel breathe a bit
-        await res.revalidate(`${page}`);
+        await res.revalidate(page);
 
         return res.json({ revalidated: true });
       } catch (err) {
