@@ -27,7 +27,7 @@ export default async function handler(req: any, res: any) {
       }
 
       if (
-        (query.page === undefined) ||
+        query.page === undefined ||
         ![
           "",
           "home",
@@ -39,14 +39,17 @@ export default async function handler(req: any, res: any) {
           "events",
           "contact",
           "blog",
-        ].includes(query.page)
+        ].includes(query.page) 
+        // || !query.page.startsWith("blog/")
       ) {
-        return res.status(401).json({ message: `The page '${query.page}' does not exist` });
+        return res
+          .status(401)
+          .json({ message: `The page '${query.page}' does not exist` });
       }
 
       try {
         console.log(`Starting regeneration of page /${query.page}`);
-        
+
         // this should be the actual path not a rewritten path
         // e.g. for "/blog/[slug]" this should be "/blog/post-1"
         await res.revalidate(`/${query.page}`);

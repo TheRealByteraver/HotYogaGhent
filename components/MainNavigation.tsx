@@ -72,6 +72,11 @@ function DropdownMenu(props: any) {
           <div className="p-1 hover:bg-lime-400 hover:text-white">Contact</div>
         </Link>
       </li>
+      <li>
+        <Link href="/blog">
+          <div className="p-1 hover:bg-lime-400 hover:text-white">Blog</div>
+        </Link>
+      </li>
     </ul>
   );
 }
@@ -102,6 +107,9 @@ function Menu(props: any) {
       </li>
       <li className="inline whitespace-nowrap">
         <Link href="/contact">Contact</Link>
+      </li>
+      <li className="inline whitespace-nowrap">
+        <Link href="/blog">Blog</Link>
       </li>
     </ul>
   );

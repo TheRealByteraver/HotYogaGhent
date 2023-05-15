@@ -49,7 +49,7 @@ const Home = (props: any) => {
   return (
     <>
       <Head>
-        <title>Hot Yoga Ghent</title>
+        <title>Home</title>
         <meta
           name="description"
           content="Welcome to the website of Hot Yoga Ghent"
