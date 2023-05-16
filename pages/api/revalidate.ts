@@ -69,7 +69,7 @@ export default async function handler(req: any, res: any) {
         });
       }
 
-      if (query.page === undefined || !query.page.startsWith("blog/")) {
+      if (query.page === undefined || query.page !== "blog") {
         return res.status(401).json({
           message: `Please update page '/${query.page}' with a GET request, same url`,
         });
@@ -82,10 +82,10 @@ export default async function handler(req: any, res: any) {
 
         // this should be the actual path not a rewritten path
         // e.g. for "/blog/[slug]" this should be "/blog/post-1"
-        await res.revalidate(`/${query.page}`);
+        // await res.revalidate(`/${query.page}`);
 
         // delay of 10s gives "x-vercel-error": "FUNCTION_INVOCATION_TIMEOUT",
-        await setTimeout(500); // let Vercel breathe a bit
+        // await setTimeout(500); // let Vercel breathe a bit
         await res.revalidate(page);
 
         return res.json({ revalidated: true });
