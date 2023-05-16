@@ -1,0 +1,69 @@
+{
+  "metadata": { "tags": [] },
+  "sys": {
+    "type": "Entry",
+    "id": "49ER2weHfGULg9ug9ilo7f",
+    "space": {
+      "sys": { "type": "Link", "linkType": "Space", "id": "280j53ipcahw" }
+    },
+    "environment": {
+      "sys": { "id": "master", "type": "Link", "linkType": "Environment" }
+    },
+    "contentType": {
+      "sys": { "type": "Link", "linkType": "ContentType", "id": "blogPost" }
+    },
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "3z6w32xJMPCq7um8fYndsQ"
+      }
+    },
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "3z6w32xJMPCq7um8fYndsQ"
+      }
+    },
+    "revision": 5,
+    "createdAt": "2023-05-16T09:57:09.931Z",
+    "updatedAt": "2023-05-16T10:37:15.296Z"
+  },
+  "fields": {
+    "blogTitle": { "en-US": "Blog Post number 5, no less" },
+    "slug": { "en-US": "blog-post-number-5-no-less" },
+    "blogBody": {
+      "en-US": {
+        "data": {},
+        "content": [
+          {
+            "data": {},
+            "content": [
+              {
+                "data": {},
+                "marks": [],
+                "value": "Hi! post number 5 ",
+                "nodeType": "text"
+              }
+            ],
+            "nodeType": "paragraph"
+          },
+          {
+            "data": {},
+            "content": [
+              {
+                "data": {},
+                "marks": [],
+                "value": "changed the blog post at 12:37",
+                "nodeType": "text"
+              }
+            ],
+            "nodeType": "paragraph"
+          }
+        ],
+        "nodeType": "document"
+      }
+    }
+  }
+}
