@@ -75,40 +75,53 @@ export default async function handler(req: any, res: any) {
         });
       }
 
-      // const data = {
-      //   "body received from Vercel's middleware":
-      //     '{"metadata":{"tags":[]},"sys":{"type":"Entry","id":"49ER2weHfGULg9ug9ilo7f","space":{"sys":{"type":"Link","linkType":"Space","id":"280j53ipcahw"}},"environment":{"sys":{"id":"master","type":"Link","linkType":"Environment"}},"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"blogPost"}},"createdBy":{"sys":{"type":"Link","linkType":"User","id":"3z6w32xJMPCq7um8fYndsQ"}},"updatedBy":{"sys":{"type":"Link","linkType":"User","id":"3z6w32xJMPCq7um8fYndsQ"}},"revision":4,"createdAt":"2023-05-16T09:57:09.931Z","updatedAt":"2023-05-16T10:29:02.366Z"},"fields":{"blogTitle":{"en-US":"Blog Post number 5, no less"},"slug":{"en-US":"blog-post-number-5-no-less"},"blogBody":{"en-US":{"data":{},"content":[{"data":{},"content":[{"data":{},"marks":[],"value":"Hi! post number 5 ","nodeType":"text"}],"nodeType":"paragraph"},{"data":{},"content":[{"data":{},"marks":[],"value":"this edit was made to see the processed request body from Vercel\'s Next js","nodeType":"text"}],"nodeType":"paragraph"}],"nodeType":"document"}}}}',
-      // };
-
-      // below is all good, client side
-      // console.log('typeof req.body:', typeof req.body);
-      // console.log('req.body:', req.body);
-      // console.log('req.body.fields.slug["en-US"]:', req.body.fields.slug["en-US"]);
-
-      const errorMessages = [];
-
-      if (!req.body) {
-        errorMessages.push(`req.body is not defined: ${req.body}`);
+      // Next js does not understand the content-type header 
+      // "application/vnd.contentful.management.v1+json" and will therefor
+      // not parse the body, so we need to do it ourselves, unless
+      // we can change the content-header to "application/json" in
+      // the request itself of course, when it gets sent.
+      if (typeof req.body === 'string') {
+        req.body = JSON.parse(req.body);
       }
 
-      if (!req.body?.fields) {
-        errorMessages.push(`req.body.fields is not defined: ${req.body?.fields}`);
-      }
-
-      if (!req.body?.fields?.slug) {
-        errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug}`);
+      if (typeof req.body !== 'object') {
+        return res.status(401).json({
+          error: 'Unable to parse body or body is empty (see below)',
+          body: req.body
+        });          
       }
 
       if (!req.body?.fields?.slug?.["en-US"]) {
-        errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug?.["en-US"]}`);
+        return res.status(401).json({
+          error: `req.body.fields.slug["en-US"] is not defined: ${req.body?.fields?.slug?.["en-US"]} (see below for full request body)`,
+          body: req.body
+        });          
       }
 
-      if (errorMessages.length > 0) {
-        return res.status(401).json({
-          errors: errorMessages,
-          body: req.body
-        });  
-      }
+      // const errorMessages = [];
+
+      // if (!req.body) {
+      //   errorMessages.push(`req.body is not defined: ${req.body}`);
+      // }
+
+      // if (!req.body?.fields) {
+      //   errorMessages.push(`req.body.fields is not defined: ${req.body?.fields}`);
+      // }
+
+      // if (!req.body?.fields?.slug) {
+      //   errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug}`);
+      // }
+
+      // if (!req.body?.fields?.slug?.["en-US"]) {
+      //   errorMessages.push(`req.body.fields.slug["en-US"] is not defined: ${req.body?.fields?.slug?.["en-US"]}`);
+      // }
+
+      // if (errorMessages.length > 0) {
+      //   return res.status(401).json({
+      //     errors: errorMessages,
+      //     body: req.body
+      //   });  
+      // }
 
       const page = `/${query.page}/${req.body.fields.slug["en-US"]}`;
 
