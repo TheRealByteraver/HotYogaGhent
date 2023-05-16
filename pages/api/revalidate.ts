@@ -85,36 +85,30 @@ export default async function handler(req: any, res: any) {
       // console.log('req.body:', req.body);
       // console.log('req.body.fields.slug["en-US"]:', req.body.fields.slug["en-US"]);
 
+      const errorMessages = [];
+
       if (!req.body) {
-        return res.status(401).json({
-          message: `req.body is not defined!`,
-          body: req.body
-        });
+        errorMessages.push(`req.body is not defined: ${req.body}`);
       }
 
       if (!req.body.fields) {
-        return res.status(401).json({
-          message: `req.body.fields is not defined!`,
-          body: req.body
-        });
+        errorMessages.push(`req.body.fields is not defined: ${req.body.fields}`);
       }
 
       if (!req.body.fields.slug) {
-        return res.status(401).json({
-          message: `req.body.fields.slug is not defined!`,
-          body: req.body
-        });
+        errorMessages.push(`req.body.fields.slug is not defined: ${req.body.fields.slug}`);
       }
 
       if (!req.body.fields.slug["en-US"]) {
-        return res.status(401).json({
-          message: `req.body.fields.slug["en-US"] is not defined!`,
-          body: req.body
-        });
+        errorMessages.push(`req.body.fields.slug is not defined: ${req.body.fields.slug["en-US"]}`);
       }
 
-      // debug!
-      return res.status(401).json(req.body);
+      if (errorMessages.length > 0) {
+        return res.status(401).json({
+          errors: errorMessages,
+          body: req.body
+        });  
+      }
 
       const page = `/${query.page}/${req.body.fields.slug["en-US"]}`;
 
