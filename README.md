@@ -50,6 +50,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Google maps insert on contact page?
 
 ## Todo:
+- extract Head component
 - remove landing page
 - extract sub components from page files
 - fix "any" everywhere (typescript)

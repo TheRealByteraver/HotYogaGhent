@@ -1,5 +1,3 @@
-// file pages/api/revalidate:
-
 import { setTimeout } from "timers/promises";
 
 // hooked as https://hot-yoga-ghent.vercel.app/api/revalidate?secret=stayhappy&page=timetable (or other page :) )
@@ -26,19 +24,20 @@ export default async function handler(req: any, res: any) {
 
       if (
         query.page === undefined ||
-        ![
-          "",
-          "home",
-          "yoga",
-          "new-to-hot-yoga-ghent",
-          "timetable",
-          "pricing",
-          "testimonials",
-          "events",
-          "contact",
-          "blog",
-        ].includes(query.page) 
-        // || !query.page.startsWith("blog/")
+        !(
+          [
+            "",
+            "home",
+            "yoga",
+            "new-to-hot-yoga-ghent",
+            "timetable",
+            "pricing",
+            "testimonials",
+            "events",
+            "contact",
+            "blog",
+          ].includes(query.page) || query.page.startsWith("blog/")
+        )
       ) {
         return res
           .status(401)
@@ -60,6 +59,8 @@ export default async function handler(req: any, res: any) {
       }
       break;
 
+    // https://vercel.com/templates/next.js/nextjs-blog-preview-mode
+
     case "POST": // for blog posts
       // Check for secret to confirm this is a valid request
       if (query.secret !== process.env.REVALIDATE_TOKEN) {
@@ -68,25 +69,13 @@ export default async function handler(req: any, res: any) {
         });
       }
 
-      if (
-        query.page === undefined ||
-        !query.page.startsWith("blog")
-      ) {
-        return res
-          .status(401)
-          .json({ message: `Please update page '/${query.page}' with a GET request, same url` });
+      if (query.page === undefined || !query.page.startsWith("blog/")) {
+        return res.status(401).json({
+          message: `Please update page '/${query.page}' with a GET request, same url`,
+        });
       }
 
-      // console.log('in POST request for revalidate, req.body:', req.body);
-      // fields: {
-      //   blogTitle: { 'en-US': 'This is the third blog in this awesome series' },
-      //   slug: { 'en-US': 'this-is-the-third-blog-in-this-awesome-series' },
-      //   blogBody: { 'en-US': [Object] }
-      // }      
-
-      const page = `/${query.page}/${req.body?.fields?.slug['en-US']}`;
-
-      // console.log('page = ', page);
+      const page = `/${query.page}/${req.body.fields.slug["en-US"]}`;
 
       try {
         console.log(`Starting regeneration of page ${page}`);

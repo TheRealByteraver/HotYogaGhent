@@ -1,15 +1,39 @@
 import Head from "next/head";
 import MainNavigation from "@/components/MainNavigation";
-import {
-  getContentfulEntries,
-  getContentfulEntry,
-} from "@/services/contentful/client";
-import { GetStaticPaths, GetStaticProps } from "next";
-import Link from "next/link";
+import { getContentfulEntries } from "@/services/contentful/client";
+import { GetStaticProps } from "next";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 
-const Blog = ({ blog }: { blog: any }) => {
-  // console.log("blog:", blog);
+const Blog = ({
+  blog,
+}: {
+  blog: {
+    contentfulId: string;
+    createdAt: string;
+    title: string;
+    url: string;
+    contents: object;
+  };
+}) => {
+  // reload the blog after the initial load just to be sure to get the most
+  // recent data. I had to make a separate api endpoint for this, that will 
+  // only revalidate blogs, without secret token. What else could I do when 
+  // Vercel can't handle two consecutive refreshes in a row? This solution 
+  // is far from ideal, because now every visit of a blog page by about 
+  // anybody will cause a revalidation of that very page.
+  // This solution was abandoned in favor of automatic revalidation with an
+  // interval of one hour.
+
+  // useEffect(() => {
+  //   const refreshBlogPost = async () => {
+  //     fetch(
+  //       "http://localhost:3000/api/revalidateBlogPost?page=" + blog.url
+  //     ).then((result) => {
+  //       console.log(result);
+  //     });
+  //   };
+  //   refreshBlogPost();
+  // }, [blog.url]);
 
   return (
     <>
@@ -27,7 +51,7 @@ const Blog = ({ blog }: { blog: any }) => {
       <main>
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10 text-white">
           <h1 className="text-2xl mb-4">{blog.title}</h1>
-          <em>published on {blog.createdAt}</em>         
+          <em>published on {blog.createdAt}</em>
           <RichTextWrapper contents={blog.contents} />
 
           <div className="h-screen"></div>
@@ -50,10 +74,10 @@ const getStaticPaths = async () => {
     // NextJs will try to generate a new page based on unknown slug
     fallback: "blocking", // don't show placeholder while page is being generated
     paths: items.map((blogPost: any) => ({
-        params: {
-          slug: blogPost.fields.slug,
-        },
-      })),
+      params: {
+        slug: blogPost.fields.slug,
+      },
+    })),
   };
 };
 
@@ -66,14 +90,14 @@ const getStaticProps: GetStaticProps = async (context) => {
   });
   const { items } = res;
 
-  // Give the user a 404 if he tries to access a non-existant blog
+  // Give the user a 404 if he tries to access a non-existent blog
   if (items.length === 0) {
     return {
       notFound: true,
-    }
+    };
   }
 
-  // 'match' is not exact, i.e. 'stretch techniques' and 'Yoga and stretching' 
+  // 'match' is not exact, i.e. 'stretch techniques' and 'Yoga and stretching'
   // will both match the slug 'stretch', so we need to filter the result
   let item;
   if (items.length > 1) {
@@ -85,17 +109,21 @@ const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       blog: {
+        contentfulId: item.sys.id,
         createdAt: new Date(item.sys.createdAt).toLocaleString(),
         title: item.fields.blogTitle,
-        url: "/blog/" + item.fields.slug,
+        url: "blog/" + item.fields.slug,
         contents: item.fields.blogBody,
         // author: item.fields.author,
         // avatarUrl: "https:" + item.fields.avatar.fields.file.url,
         // avatarWidth: items[0].fields.avatar.fields.file.details.image.width,
         // avatarHeight: items[0].fields.avatar.fields.file.details.image.height,
-      }
+      },
     },
-    // revalidate: 10,  // revalidate at most every 10 seconds
+    // revalidate at most every hour. Not ideal, but I don't see any other 
+    // solution as for now, as Vercel can't handle two page regenerations 
+    // in a row.
+    revalidate: 3600, 
   };
 };
 
