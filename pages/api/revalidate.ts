@@ -75,6 +75,30 @@ export default async function handler(req: any, res: any) {
         });
       }
 
+      if (!req.body) {
+        return res.status(401).json({
+          message: `req.body is not defined!`,
+        });
+      }
+
+      if (!req.body.fields) {
+        return res.status(401).json({
+          message: `req.body.fields is not defined!`,
+        });
+      }
+
+      if (!req.body.fields.slug) {
+        return res.status(401).json({
+          message: `req.body.fields.slug is not defined!`,
+        });
+      }
+
+      if (!req.body.fields.slug["en-US"]) {
+        return res.status(401).json({
+          message: `req.body.fields.slug["en-US"] is not defined!`,
+        });
+      }
+
       const page = `/${query.page}/${req.body.fields.slug["en-US"]}`;
 
       try {
