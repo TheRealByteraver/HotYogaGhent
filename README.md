@@ -50,9 +50,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Google maps insert on contact page?
 
 ## Todo:
-- extract Head component
-- remove landing page
-- extract sub components from page files
+- extract 'sendMail()' from /contact page
 - fix "any" everywhere (typescript)
 
 - To add: map with location on contact page, instructions for bike parking
@@ -64,6 +62,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - Add Instagram & Facebook links on every page (footer)
 
 ## Done:
+- extract Head component
+- make sitemap dynamic (blog posts)
+- remove landing page
 - implement blog feature
 - implement webhooks for other pages
 - getStaticProps onderaan

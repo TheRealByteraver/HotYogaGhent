@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -12,6 +11,7 @@ import TextArea from "@/components/ui/TextArea";
 import { useRouter } from "next/router";
 import { GetStaticProps } from "next";
 import { getContentfulEntry } from "@/services/contentful/client";
+import HYGHead from "@/components/HYGHead";
 
 // same definition as in /pages/api/sendMessage.ts ...
 type ContactFormInputs = {
@@ -72,23 +72,14 @@ const Contact = ({ contents }: { contents: any }) => {
     if (captchaValidated) {
       console.log("sending message :)");
       sendMail(data, (response: boolean) => {
-        router.push(`/home?contact=${response ? "success" : "fail"}`);
+        router.push(`/?contact=${response ? "success" : "fail"}`);
       });
     }
   };
 
   return (
     <>
-      <Head>
-        <title>Hot Yoga Ghent</title>
-        <meta
-          name="description"
-          content="Welcome to the website of Hot Yoga Ghent"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <HYGHead title='Contact us' />
       <MainNavigation>
         <main className="relative">
           {/* <MessageSentModal message="hello" /> */}

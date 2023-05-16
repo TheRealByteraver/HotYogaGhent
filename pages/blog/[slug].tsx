@@ -1,8 +1,8 @@
-import Head from "next/head";
 import MainNavigation from "@/components/MainNavigation";
 import { getContentfulEntries } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
+import HYGHead from "@/components/HYGHead";
 
 const Blog = ({
   blog,
@@ -24,6 +24,9 @@ const Blog = ({
   // This solution was abandoned in favor of automatic revalidation with an
   // interval of one hour.
 
+  // Note: issue was now "solved" by implementing a second webhook that fires
+  // with the same criteria (blogPost "publish" event in Contentful)
+
   // useEffect(() => {
   //   const refreshBlogPost = async () => {
   //     fetch(
@@ -37,16 +40,7 @@ const Blog = ({
 
   return (
     <>
-      <Head>
-        <title>Blog</title>
-        <meta
-          name="description"
-          content="Welcome to the website of Hot Yoga Ghent"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <HYGHead title={blog.title} />
       <MainNavigation />
       <main>
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10 text-white">

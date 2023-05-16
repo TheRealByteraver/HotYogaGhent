@@ -1,23 +1,14 @@
-import Head from "next/head";
 import Image from "next/image";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { GetStaticProps } from "next";
 import { getContentfulEntries } from "@/services/contentful/client";
+import HYGHead from "@/components/HYGHead";
 
 const Testimonials = (props: any) => {
   return (
     <>
-      <Head>
-        <title>Testimonials</title>
-        <meta
-          name="description"
-          content="Welcome to the website of Hot Yoga Ghent"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <HYGHead title='Testimonials' />
       <MainNavigation>
         <main>
           <div className="h-fit w-full text-white bg-emerald-900">

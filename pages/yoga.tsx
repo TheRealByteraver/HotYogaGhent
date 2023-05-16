@@ -1,8 +1,8 @@
-import Head from "next/head";
 import MainNavigation from "@/components/MainNavigation";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { getContentfulEntry } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
+import HYGHead from "@/components/HYGHead";
 
 const Yoga = ({
   pageTitle,
@@ -13,16 +13,7 @@ const Yoga = ({
 }) => {
   return (
     <>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta
-          name="description"
-          content="Welcome to the website of Hot Yoga Ghent"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+      <HYGHead title={pageTitle} />
       <MainNavigation />
       <main>
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">

@@ -81,6 +81,7 @@ export default async function handler(req: any, res: any) {
       // we can change the content-header to "application/json" in
       // the request itself of course, when it gets sent.
       if (typeof req.body === 'string') {
+        console.log('Request body is not yet parsed. Parsing body...');
         req.body = JSON.parse(req.body);
       }
 

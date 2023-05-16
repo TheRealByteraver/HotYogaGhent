@@ -27,7 +27,7 @@ function DropdownMenu(props: any) {
       onMouseLeave={props.closeMenu}
     >
       <li>
-        <Link href="/home">
+        <Link href="/">
           <div className="p-1 hover:bg-lime-400 hover:text-white">Home</div>
         </Link>
       </li>
@@ -85,7 +85,7 @@ function Menu(props: any) {
   return (
     <ul className="h-full max-w-5xl flex justify-around items-center text-white text-lg">
       <li className="inline whitespace-nowrap">
-        <Link href="/home">Home</Link>
+        <Link href="/">Home</Link>
       </li>
       <li className="inline whitespace-nowrap">
         <Link href="/yoga">Yoga</Link>
