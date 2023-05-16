@@ -75,11 +75,18 @@ export default async function handler(req: any, res: any) {
         });
       }
 
-      // debug!
-      return res.status(401).json({
-        "body received from Vercel's middleware": req.body
-      });
+      // const data = {
+      //   "body received from Vercel's middleware":
+      //     '{"metadata":{"tags":[]},"sys":{"type":"Entry","id":"49ER2weHfGULg9ug9ilo7f","space":{"sys":{"type":"Link","linkType":"Space","id":"280j53ipcahw"}},"environment":{"sys":{"id":"master","type":"Link","linkType":"Environment"}},"contentType":{"sys":{"type":"Link","linkType":"ContentType","id":"blogPost"}},"createdBy":{"sys":{"type":"Link","linkType":"User","id":"3z6w32xJMPCq7um8fYndsQ"}},"updatedBy":{"sys":{"type":"Link","linkType":"User","id":"3z6w32xJMPCq7um8fYndsQ"}},"revision":4,"createdAt":"2023-05-16T09:57:09.931Z","updatedAt":"2023-05-16T10:29:02.366Z"},"fields":{"blogTitle":{"en-US":"Blog Post number 5, no less"},"slug":{"en-US":"blog-post-number-5-no-less"},"blogBody":{"en-US":{"data":{},"content":[{"data":{},"content":[{"data":{},"marks":[],"value":"Hi! post number 5 ","nodeType":"text"}],"nodeType":"paragraph"},{"data":{},"content":[{"data":{},"marks":[],"value":"this edit was made to see the processed request body from Vercel\'s Next js","nodeType":"text"}],"nodeType":"paragraph"}],"nodeType":"document"}}}}',
+      // };
 
+      // below is all good, client side
+      // console.log('typeof req.body:', typeof req.body);
+      // console.log('req.body:', req.body);
+      // console.log('req.body.fields.slug["en-US"]:', req.body.fields.slug["en-US"]);
+
+      // debug!
+      return res.status(401).json(req.body);
 
       // if (!req.body) {
       //   return res.status(401).json({
