@@ -92,15 +92,15 @@ export default async function handler(req: any, res: any) {
       }
 
       if (!req.body?.fields) {
-        errorMessages.push(`req.body.fields is not defined: ${req.body.fields}`);
+        errorMessages.push(`req.body.fields is not defined: ${req.body?.fields}`);
       }
 
       if (!req.body?.fields?.slug) {
-        errorMessages.push(`req.body.fields.slug is not defined: ${req.body.fields.slug}`);
+        errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug}`);
       }
 
       if (!req.body?.fields?.slug?.["en-US"]) {
-        errorMessages.push(`req.body.fields.slug is not defined: ${req.body.fields.slug["en-US"]}`);
+        errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug?.["en-US"]}`);
       }
 
       if (errorMessages.length > 0) {
