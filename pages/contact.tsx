@@ -13,14 +13,15 @@ import { GetStaticProps } from "next";
 import { getContentfulEntry } from "@/services/contentful/client";
 import HYGHead from "@/components/HYGHead";
 
-// same definition as in /pages/api/sendMessage.ts ...
-type ContactFormInputs = {
-  fullName: string;
-  emailAddress: string;
-  message: string;
-};
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
+import { IPageFields } from "@/@types/generated/contentful";
+import { Entry } from "contentful";
 
-const sendMail = async (emailData: ContactFormInputs, callback: Function) => {
+const sendMail = async (
+  emailData: ContactFormInputs,
+  callback: (response: boolean) => void
+) => {
   const response = await fetch("/api/sendMessage", {
     method: "POST",
     headers: {
@@ -33,7 +34,7 @@ const sendMail = async (emailData: ContactFormInputs, callback: Function) => {
   callback(response.status === 200);
 };
 
-const Contact = ({ contents }: { contents: any }) => {
+const Contact: React.FC<{ contents: Document }> = ({ contents }) => {
   const router = useRouter();
 
   // custom error messages
@@ -64,7 +65,7 @@ const Contact = ({ contents }: { contents: any }) => {
 
   const [captchaValidated, setCaptchaValidated] = useState(false);
 
-  function onCaptchaChange(value: any) {
+  function onCaptchaChange(value: string | null) {
     setCaptchaValidated(!!value); // force to boolean
   }
 
@@ -79,7 +80,7 @@ const Contact = ({ contents }: { contents: any }) => {
 
   return (
     <>
-      <HYGHead title='Contact us' />
+      <HYGHead title="Contact us" />
       <MainNavigation>
         <main className="relative">
           {/* <MessageSentModal message="hello" /> */}
@@ -139,7 +140,9 @@ const Contact = ({ contents }: { contents: any }) => {
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntry("3T7E5KfK0szuT3QTA1JiOT");
+  const res: Entry<IPageFields> = await getContentfulEntry<IPageFields>(
+    "3T7E5KfK0szuT3QTA1JiOT"
+  );
   const { contents } = res.fields;
 
   return {

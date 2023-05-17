@@ -3,13 +3,18 @@ import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { GetStaticProps } from "next";
 import { getContentfulEntry } from "@/services/contentful/client";
 import HYGHead from "@/components/HYGHead";
+import { IPageFields } from "@/@types/generated/contentful";
+import { Entry } from "contentful";
+
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
 
 const NewToHotYogaGhent = ({
   pageTitle,
   contents,
 }: {
   pageTitle: string;
-  contents: any;
+  contents: Document | undefined;
 }) => {
   return (
     <>
@@ -27,7 +32,7 @@ const NewToHotYogaGhent = ({
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntry("4buPM5IDcrk3byRf2Ph5Tn");
+  const res: Entry<IPageFields> = await getContentfulEntry<IPageFields>("4buPM5IDcrk3byRf2Ph5Tn");
   const { pageTitle, contents } = res.fields;
 
   return {

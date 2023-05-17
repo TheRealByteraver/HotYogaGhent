@@ -4,13 +4,6 @@ import { createClient } from 'contentful';
 
 const nodemailer = require("nodemailer");
 
-// same as type ContactFormInputs in pages/contact.tsx
-type ContactFormInputs = {
-  fullName: string,
-  emailAddress: string,
-  message: string,
-};
-
 async function sendMessage(messageData: ContactFormInputs) {
 
   // create reusable transporter object using the default SMTP transport

@@ -3,31 +3,30 @@ import { getContentfulEntries } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import HYGHead from "@/components/HYGHead";
+import { IBlogPostFields } from "@/@types/generated/contentful";
+import { EntryCollection } from "contentful";
 
-const Blog = ({
-  blogs,
-}: {
-  blogs: {
-    createdAt: string;
-    title: string;
-    url: string;
-  }[];
-}) => {
+type Blog = {
+  timestamp: number;
+  createdAt: string;
+  title: string;
+  url: string;
+};
+
+const Blog = ({ blogs }: { blogs: Blog[] }) => {
   return (
     <>
-      <HYGHead title='Blog' />
+      <HYGHead title="Blog" />
       <MainNavigation />
       <main>
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10 text-white">
           <h1 className="text-2xl mb-4">Check out our blogs!</h1>
           <ul className="underline">
-            {blogs.map(
-              (blog: { createdAt: string; title: string; url: string }) => (
-                <li key={blog.createdAt}>
-                  <Link href={blog.url}>{blog.title}</Link>
-                </li>
-              )
-            )}
+            {blogs.map((blog) => (
+              <li key={blog.createdAt}>
+                <Link href={blog.url}>{blog.title}</Link>
+              </li>
+            ))}
           </ul>
 
           <div className="h-screen"></div>
@@ -38,17 +37,18 @@ const Blog = ({
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntries({ content_type: "blogPost" });
+  const res: EntryCollection<IBlogPostFields> =
+    await getContentfulEntries<IBlogPostFields>({ content_type: "blogPost" });
   const { items } = res;
 
   return {
     props: {
       blogs: items
-        .map((item: any) => {
-          const timeStamp = new Date(item.sys.createdAt).getTime();
+        .map((item): Blog => {
+          const timestamp = new Date(item.sys.createdAt).getTime();
           return {
-            timeStamp,
-            createdAt: timeStamp.toLocaleString(),
+            timestamp,
+            createdAt: new Date(timestamp).toLocaleString(),
             title: item.fields.blogTitle,
             url: "/blog/" + item.fields.slug,
             // author: item.fields.author,
@@ -58,7 +58,7 @@ const getStaticProps: GetStaticProps = async () => {
           };
         })
         // Sort blogs, most recent one first
-        .sort((a: any, b: any) => b.timeStamp - a.timeStamp),
+        .sort((a: Blog, b: Blog) => b.timestamp - a.timestamp),
     },
     // revalidate: 10,  // revalidate at most every 10 seconds
   };

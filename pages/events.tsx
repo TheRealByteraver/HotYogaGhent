@@ -4,16 +4,32 @@ import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { getContentfulEntries } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
 
-const Events = ({ events }: { events: any }) => {
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
+import { IEventFields } from "@/@types/generated/contentful";
+import { EntryCollection } from "contentful";
+
+type HYGEvent = {
+  id: string,
+  createdAt: number,
+  createdAtString: string,
+  title: string,
+  eventDate: string,
+  eventTime: string,
+  location: { lat: number; lon: number },
+  contents: Document | undefined,  
+}
+
+const Events: React.FC<{ events: HYGEvent[] }> = ({ events }) => {
   return (
     <>
-      <HYGHead title='Events' />
+      <HYGHead title="Events" />
       <MainNavigation>
         <main>
           <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
             {/* Idea: offer ways to sort events based on event date, last updated etc */}
 
-            {events.map((event: any) => {
+            {events.map((event: HYGEvent) => {
               return (
                 <div
                   key={event.id}
@@ -44,14 +60,14 @@ const Events = ({ events }: { events: any }) => {
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntries({ content_type: "event" });
+  const res: EntryCollection<IEventFields>  = await getContentfulEntries<IEventFields>({ content_type: "event" });
   const { items } = res;
 
   // https://stackoverflow.com/questions/19511597/how-to-get-address-location-from-latitude-and-longitude-in-google-map
 
   return {
     props: {
-      events: items.map((item: any) => ({
+      events: items.map((item): HYGEvent => ({
         id: item.sys.id,
         createdAt: new Date(item.sys.createdAt).getTime(),
         createdAtString: new Date(item.sys.createdAt).toLocaleDateString(),

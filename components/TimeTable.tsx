@@ -1,6 +1,7 @@
+/// <reference path="../models/timeTableData.d.ts" />
 import { useState, useEffect } from "react";
 
-const TimeTable = ({ timeTable }: any) => {
+const TimeTable: React.FC<{ timeTable: TimeTableWeek[] }> = ({ timeTable }) => {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [dayIndex, setDayIndex] = useState(-1);
 
@@ -38,7 +39,7 @@ const TimeTable = ({ timeTable }: any) => {
           </tr>
         </thead>
         <tbody>
-          {timeTable.map((time: any, index: number) => {
+          {timeTable.map((time: TimeTableWeek, index: number) => {
             const isLastRow = index === timeTable.length - 1;
             const times = [
               time.monday,

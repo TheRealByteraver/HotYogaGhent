@@ -4,11 +4,28 @@ import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { GetStaticProps } from "next";
 import { getContentfulEntries } from "@/services/contentful/client";
 import HYGHead from "@/components/HYGHead";
+import { ITestimonialFields } from "@/@types/generated/contentful";
+import { EntryCollection } from "contentful";
 
-const Testimonials = (props: any) => {
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
+
+type Testimonial = {
+  id: string;
+  createdAt: string;
+  text: Document | undefined;
+  author: string;
+  avatarUrl: string;
+  avatarWidth: number | undefined;
+  avatarHeight: number | undefined;
+};
+
+const Testimonials: React.FC<{
+  testimonials: Testimonial[];
+}> = ({ testimonials }) => {
   return (
     <>
-      <HYGHead title='Testimonials' />
+      <HYGHead title="Testimonials" />
       <MainNavigation>
         <main>
           <div className="h-fit w-full text-white bg-emerald-900">
@@ -18,7 +35,7 @@ const Testimonials = (props: any) => {
 
             {/* testimonial group container */}
             <ul className="w-full flex flex-row flex-wrap justify-around text-sm text-justify px-2 sm:px-4">
-              {props.testimonials.map((testimonial: any) => (
+              {testimonials.map((testimonial: Testimonial) => (
                 <li key={testimonial.id}>
                   {/* individual testimonial container */}
                   <div className="relative w-full h-fit mt-28 flex flex-col bg-teal-800 rounded-lg lg:mx-4 lg:w-[460px]">
@@ -59,20 +76,27 @@ const Testimonials = (props: any) => {
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntries({ content_type: "testimonial" });
+  const res: EntryCollection<ITestimonialFields> =
+    await getContentfulEntries<ITestimonialFields>({
+      content_type: "testimonial",
+    });
   const { items } = res;
 
   return {
     props: {
-      testimonials: items.map((item: any) => ({
-        id: item.sys.createdAt,
-        createdAt: new Date(item.sys.createdAt).toLocaleDateString(),
-        text: item.fields.testimonialText,
-        author: item.fields.author,
-        avatarUrl: "https:" + item.fields.avatar.fields.file.url,
-        avatarWidth: items[0].fields.avatar.fields.file.details.image.width,
-        avatarHeight: items[0].fields.avatar.fields.file.details.image.height,
-      })),
+      testimonials: items.map(
+        (item): Testimonial => ({
+          id: item.sys.createdAt,
+          createdAt: new Date(item.sys.createdAt).toLocaleDateString(),
+          text: item.fields.testimonialText,
+          author: item.fields.author,
+          avatarUrl: "https:" + item.fields.avatar?.fields?.file?.url,
+          avatarWidth:
+            items[0].fields.avatar?.fields?.file?.details?.image?.width,
+          avatarHeight:
+            items[0].fields.avatar?.fields?.file?.details?.image?.height,
+        })
+      ),
     },
     // revalidate: 10,  // revalidate at most every 10 seconds
   };

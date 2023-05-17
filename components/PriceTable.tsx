@@ -1,5 +1,7 @@
 
-const PriceTable = ({ priceTable }: any) => {
+const PriceTable: React.FC<{ priceTable: MembershipLevel[] }> = ({
+  priceTable,
+}) => {
   const cellStyle = "p-1 md:p-3 border-b border-emerald-500 ";
 
   return (
@@ -12,7 +14,7 @@ const PriceTable = ({ priceTable }: any) => {
           </tr>
         </thead>
         <tbody>
-          {priceTable.map((membershipLevel: any, index: number) => {
+          {priceTable.map((membershipLevel: MembershipLevel, index: number) => {
             const lastRowMarkUp =
               index === priceTable.length - 1 ? "border-b-0" : "";
             return (

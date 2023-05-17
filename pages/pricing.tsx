@@ -4,17 +4,23 @@ import { getContentfulEntry } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
 import HYGHead from "@/components/HYGHead";
 import PriceTable from "@/components/PriceTable";
+import {
+  IPageFields,
+  IPriceListTableFields,
+} from "@/@types/generated/contentful";
+import { Entry } from "contentful";
 
-const Pricing = ({
-  priceTable,
-  contents,
-}: {
-  priceTable: any;
-  contents: any;
-}) => {
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
+
+
+const Pricing: React.FC<{
+  priceTable: MembershipLevel[];
+  contents: Document | undefined;
+}> = ({ priceTable, contents }) => {
   return (
     <>
-      <HYGHead title='Pricing' />
+      <HYGHead title="Pricing" />
       <MainNavigation>
         <main>
           <div className="h-fit w-full pt-10 bg-emerald-900">
@@ -34,9 +40,12 @@ const Pricing = ({
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const [priceTable, contents]: any = await Promise.all([
-    getContentfulEntry("4MfYN5vANnKcdTCejiKpiF"),
-    getContentfulEntry("4XqknYjQoHimUAyL5iwn1O"),
+  const [priceTable, contents]: [
+    Entry<IPriceListTableFields>,
+    Entry<IPageFields>
+  ] = await Promise.all([
+    getContentfulEntry<IPriceListTableFields>("4MfYN5vANnKcdTCejiKpiF"),
+    getContentfulEntry<IPageFields>("4XqknYjQoHimUAyL5iwn1O"),
   ]);
 
   return {

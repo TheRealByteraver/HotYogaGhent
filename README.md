@@ -52,14 +52,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Todo:
 - extract 'sendMail()' from /contact page
 - fix "any" everywhere (typescript)
+- Add Instagram & Facebook links on every page (footer)
 
 - To add: map with location on contact page, instructions for bike parking
 - Use React Spring to animate things
-- implement nice font: alkatra ?
+- implement nice font: alkatra?
 - Upgrade the timetable page:
   - automatically switch schedules during Gentse feesten & winter holidays
   - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
-- Add Instagram & Facebook links on every page (footer)
+
 
 ## Done:
 - extract Head component

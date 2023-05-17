@@ -3,14 +3,16 @@ import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import { getContentfulEntry } from "@/services/contentful/client";
 import { GetStaticProps } from "next";
 import HYGHead from "@/components/HYGHead";
+import { IPageFields } from "@/@types/generated/contentful";
+import { Entry } from "contentful";
 
-const Yoga = ({
-  pageTitle,
-  contents,
-}: {
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../node_modules/@contentful/rich-text-types/dist/types/types";
+
+const Yoga: React.FC<{
   pageTitle: string;
-  contents: any;
-}) => {
+  contents: Document | undefined;
+}> = ({ pageTitle, contents }) => {
   return (
     <>
       <HYGHead title={pageTitle} />
@@ -26,7 +28,9 @@ const Yoga = ({
 };
 
 const getStaticProps: GetStaticProps = async () => {
-  const res: any = await getContentfulEntry("6DEWIj4OveKErJpqEeeQmC");
+  const res: Entry<IPageFields> = await getContentfulEntry<IPageFields>(
+    "6DEWIj4OveKErJpqEeeQmC"
+  );
   const { pageTitle, contents } = res.fields;
 
   return {

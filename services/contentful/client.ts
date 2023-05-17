@@ -7,14 +7,15 @@ const getContentfulClient = () => {
   });
 }
 
-const getContentfulEntry =  async (query: string) => {
+const getContentfulEntry = async <T>(query: string) => {
   const client = getContentfulClient();
-  return await client.getEntry(query);
+  return await client.getEntry<T>(query);
 }
 
-const getContentfulEntries =  async (query: object) => {
+const getContentfulEntries =  async <T>(query: object) => {
   const client = getContentfulClient();
-  return await client.getEntries(query);
+  return await client.getEntries<T>(query);
 }
+
 
 export { getContentfulEntry, getContentfulEntries };
