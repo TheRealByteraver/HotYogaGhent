@@ -1,9 +1,10 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { setTimeout } from "timers/promises";
 
 // hooked as https://hot-yoga-ghent.vercel.app/api/revalidate?secret=stayhappy&page=timetable (or other page :) )
 // Local: try http://localhost:3000/api/revalidate?secret=stayhappy&page=timetable
 
-export default async function handler(req: any, res: any) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query } = req;
   // if the name of this file was [hello].ts instead, and you would
   // make a request to /api/identifier, then query.hello would be
@@ -36,7 +37,7 @@ export default async function handler(req: any, res: any) {
             "events",
             "contact",
             "blog",
-          ].includes(query.page) || query.page.startsWith("blog/")
+          ].includes(query.page as string) || (query.page as string).startsWith("blog/")
         )
       ) {
         return res
@@ -99,31 +100,6 @@ export default async function handler(req: any, res: any) {
         });          
       }
 
-      // const errorMessages = [];
-
-      // if (!req.body) {
-      //   errorMessages.push(`req.body is not defined: ${req.body}`);
-      // }
-
-      // if (!req.body?.fields) {
-      //   errorMessages.push(`req.body.fields is not defined: ${req.body?.fields}`);
-      // }
-
-      // if (!req.body?.fields?.slug) {
-      //   errorMessages.push(`req.body.fields.slug is not defined: ${req.body?.fields?.slug}`);
-      // }
-
-      // if (!req.body?.fields?.slug?.["en-US"]) {
-      //   errorMessages.push(`req.body.fields.slug["en-US"] is not defined: ${req.body?.fields?.slug?.["en-US"]}`);
-      // }
-
-      // if (errorMessages.length > 0) {
-      //   return res.status(401).json({
-      //     errors: errorMessages,
-      //     body: req.body
-      //   });  
-      // }
-
       const page = `/${query.page}/${req.body.fields.slug["en-US"]}`;
 
       try {
@@ -132,9 +108,6 @@ export default async function handler(req: any, res: any) {
         // this should be the actual path not a rewritten path
         // e.g. for "/blog/[slug]" this should be "/blog/post-1"
         // await res.revalidate(`/${query.page}`);
-
-        // delay of 10s gives "x-vercel-error": "FUNCTION_INVOCATION_TIMEOUT",
-        // await setTimeout(500); // let Vercel breathe a bit
         await res.revalidate(page);
 
         return res.json({ revalidated: true });
@@ -153,3 +126,5 @@ export default async function handler(req: any, res: any) {
       res.status(405).end(`Method ${method} is not allowed`);
   }
 }
+
+export default handler;

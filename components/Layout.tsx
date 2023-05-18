@@ -1,10 +1,16 @@
+import { ReactNode } from "react";
 import MainNavigation from "./MainNavigation";
 
-function Layout(props: any) {
+interface Props {
+  children?: ReactNode
+  // any props that come into the component
+}
+
+const Layout = ({children, ...props}: Props) => {
   return (
     <div>
-      {/* <MainNavigation /> */}
-      {props.children}
+      {/* <MainNavigation {...props} /> */}
+      {children}
     </div>
   );
 }

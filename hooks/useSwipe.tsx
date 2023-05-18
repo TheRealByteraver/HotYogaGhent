@@ -11,7 +11,7 @@ interface SwipeOutput {
   onTouchEnd: () => void;
 }
 
-function useSwipe(input: SwipeInput): SwipeOutput {
+const useSwipe = (input: SwipeInput): SwipeOutput => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 

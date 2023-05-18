@@ -4,22 +4,26 @@ import { GetStaticProps } from "next";
 import RichTextWrapper from "@/components/ui/RichTextWrapper";
 import HYGHead from "@/components/HYGHead";
 
-const Blog = ({
-  blog,
-}: {
+import { Entry, EntryCollection } from "contentful";
+
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../../node_modules/@contentful/rich-text-types/dist/types/types";
+import { IBlogPostFields } from "@/@types/generated/contentful";
+
+const Blog: React.FC<{
   blog: {
     contentfulId: string;
     createdAt: string;
     title: string;
     url: string;
-    contents: object;
+    contents: Document;
   };
-}) => {
+}> = ({ blog }) => {
   // reload the blog after the initial load just to be sure to get the most
-  // recent data. I had to make a separate api endpoint for this, that will 
-  // only revalidate blogs, without secret token. What else could I do when 
-  // Vercel can't handle two consecutive refreshes in a row? This solution 
-  // is far from ideal, because now every visit of a blog page by about 
+  // recent data. I had to make a separate api endpoint for this, that will
+  // only revalidate blogs, without secret token. What else could I do when
+  // Vercel can't handle two consecutive refreshes in a row? This solution
+  // is far from ideal, because now every visit of a blog page by about
   // anybody will cause a revalidation of that very page.
   // This solution was abandoned in favor of automatic revalidation with an
   // interval of one hour.
@@ -57,31 +61,41 @@ const Blog = ({
 
 const getStaticPaths = async () => {
   // we only need a list of slugs here
-  const res: any = await getContentfulEntries({
-    content_type: "blogPost",
-    select: "fields.slug",
-  });
+  const res: EntryCollection<IBlogPostFields> =
+    await getContentfulEntries<IBlogPostFields>({
+      content_type: "blogPost",
+      select: "fields.slug",
+    });
 
   const { items } = res;
 
   return {
     // NextJs will try to generate a new page based on unknown slug
     fallback: "blocking", // don't show placeholder while page is being generated
-    paths: items.map((blogPost: any) => ({
-      params: {
-        slug: blogPost.fields.slug,
-      },
-    })),
+    paths: items.map(
+      (
+        blogPost
+      ): {
+        params: {
+          slug: string;
+        };
+      } => ({
+        params: {
+          slug: blogPost.fields.slug,
+        },
+      })
+    ),
   };
 };
 
 const getStaticProps: GetStaticProps = async (context) => {
   const slug = context.params!.slug;
 
-  const res: any = await getContentfulEntries({
-    content_type: "blogPost",
-    "fields.slug[match]": slug,
-  });
+  const res: EntryCollection<IBlogPostFields> =
+    await getContentfulEntries<IBlogPostFields>({
+      content_type: "blogPost",
+      "fields.slug[match]": slug,
+    });
   const { items } = res;
 
   // Give the user a 404 if he tries to access a non-existent blog
@@ -93,9 +107,11 @@ const getStaticProps: GetStaticProps = async (context) => {
 
   // 'match' is not exact, i.e. 'stretch techniques' and 'Yoga and stretching'
   // will both match the slug 'stretch', so we need to filter the result
-  let item;
+  let item: Entry<IBlogPostFields>;
   if (items.length > 1) {
-    item = items.filter((item: any) => item.fields.slug === slug);
+    item = items.filter(
+      (item: Entry<IBlogPostFields>) => item.fields.slug === slug
+    )[0];
   } else {
     item = items[0];
   }
@@ -114,10 +130,10 @@ const getStaticProps: GetStaticProps = async (context) => {
         // avatarHeight: items[0].fields.avatar.fields.file.details.image.height,
       },
     },
-    // revalidate at most every hour. Not ideal, but I don't see any other 
-    // solution as for now, as Vercel can't handle two page regenerations 
+    // revalidate at most every hour. Not ideal, but I don't see any other
+    // solution as for now, as Vercel can't handle two page regenerations
     // in a row.
-    revalidate: 3600, 
+    // revalidate: 3600, // no longer necessary
   };
 };
 

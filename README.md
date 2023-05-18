@@ -48,21 +48,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - put a warning on the timetable page a week or two before the schedule changes (when summer holidays start for example)
   --> "Sedert 2014 beginnen de Gentse Feesten op de vrijdag voor de derde zondag van juli, en eindigen ze op de zondag van de week erna."
 - Google maps insert on contact page?
-
-## Todo:
-- extract 'sendMail()' from /contact page
-- fix "any" everywhere (typescript)
-- Add Instagram & Facebook links on every page (footer)
-
-- To add: map with location on contact page, instructions for bike parking
 - Use React Spring to animate things
-- implement nice font: alkatra?
+- To add: map with location on contact page, instructions for bike parking
 - Upgrade the timetable page:
   - automatically switch schedules during Gentse feesten & winter holidays
   - warn visitors up front of changes in the schedule, let's say 1 or 2 weeks up front
 
+## Todo:
+- Make a landing page for events the same way it is implemented for the /Blog page
+- extract 'sendMail()' from /contact page
+- Add Instagram & Facebook links on every page (footer)
 
 ## Done:
+- fix "any" everywhere (typescript)
 - extract Head component
 - make sitemap dynamic (blog posts)
 - remove landing page
@@ -84,4 +82,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Abandoned:
 - replace own hamburger menu/ icon with tailwindui one
+- implement nice font: alkatra? -> Gustavo's corner
 

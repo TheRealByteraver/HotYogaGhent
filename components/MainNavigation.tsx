@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import useSwipe from "@/hooks/useSwipe";
 
 // hidden from width of 768px
-function HamBurgerIcon(props: any) {
+interface HamBurgerIconProps {
+  children?: ReactNode
+  // any props that come into the component
+  twBorderColor: string,
+  onClick: () => void
+}
+
+const HamBurgerIcon = ({children, ...props}: HamBurgerIconProps) => {
   return (
     <div
       className={`h-full aspect-square border-2 rounded p-1 ${props.twBorderColor}`}
@@ -18,7 +25,13 @@ function HamBurgerIcon(props: any) {
   );
 }
 
-function DropdownMenu(props: any) {
+interface DropDownMenuProps {
+  children?: ReactNode
+  // any props that come into the component
+  closeMenu: () => void
+}
+
+const DropdownMenu = ({children, ...props}: DropDownMenuProps) => {
   // box-shadow: offset-x, offset-y blur-radius spread-radius rgba-color
   return (
     <ul
@@ -81,7 +94,7 @@ function DropdownMenu(props: any) {
   );
 }
 
-function Menu(props: any) {
+const Menu: React.FC = () => {
   return (
     <ul className="h-full max-w-5xl flex justify-around items-center text-white text-lg">
       <li className="inline whitespace-nowrap">
@@ -115,7 +128,12 @@ function Menu(props: any) {
   );
 }
 
-function MainNavigation(props: any) {
+interface MainNavigationProps {
+  children?: ReactNode
+  // any props that come into the component
+}
+
+const MainNavigation = ({children, ...props}: MainNavigationProps) => {
   // const [dropDownIsVisible, setDropDownIsVisible] = useState(false);
 
   const swipeHandlers = useSwipe({
@@ -141,7 +159,7 @@ function MainNavigation(props: any) {
           <DropdownMenu closeMenu={() => setDropDownIsVisible(false)} />
         )} */}
       </nav>
-      {props.children}
+      {children}
     </div>
   );
 }

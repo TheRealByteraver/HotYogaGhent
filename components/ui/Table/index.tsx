@@ -21,7 +21,7 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Table(props: any) {
+const Table = (props: any) => {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -84,3 +84,5 @@ export default function Table(props: any) {
     </div>
   );
 }
+
+export default Table;

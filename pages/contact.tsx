@@ -65,13 +65,13 @@ const Contact: React.FC<{ contents: Document }> = ({ contents }) => {
 
   const [captchaValidated, setCaptchaValidated] = useState(false);
 
-  function onCaptchaChange(value: string | null) {
+  const onCaptchaChange = (value: string | null) => {
     setCaptchaValidated(!!value); // force to boolean
   }
 
   const onSubmit: SubmitHandler<ContactFormInputs> = (data) => {
     if (captchaValidated) {
-      console.log("sending message :)");
+      // console.log("sending message :)");
       sendMail(data, (response: boolean) => {
         router.push(`/?contact=${response ? "success" : "fail"}`);
       });

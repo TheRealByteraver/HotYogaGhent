@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 // the root directory of this project as shown below:
 //
 // c:\project_dir> npm run contentful-typescript-codegen
+//
 import { IValueFields } from "@/@types/generated/contentful";
 // import { Entry } from "contentful-management";
 import { EntryCollection } from "contentful";

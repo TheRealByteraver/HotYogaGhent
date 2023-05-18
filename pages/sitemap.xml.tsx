@@ -1,9 +1,11 @@
+import { IBlogPostFields } from "@/@types/generated/contentful";
 import { getContentfulEntries } from "@/services/contentful/client";
+import { Entry, EntryCollection } from "contentful";
 
 const BASE_URL = "https://hot-yoga-ghent.vercel.app";
 // const EXTERNAL_DATA_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-function generateSiteMap(slugs: string[]) {
+const generateSiteMap = (slugs: string[]) => {
   // Include posts dynamically:
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -43,19 +45,19 @@ function generateSiteMap(slugs: string[]) {
  `;
 }
 
-function SiteMap() {
+const SiteMap = () => {
   // getServerSideProps will do the heavy lifting
 }
 
-export async function getServerSideProps({ res }: { res: any }) {
+const getServerSideProps = async ({ res }: { res: any }) => {
   // we only need a list of slugs here
-  const slugData: any = await getContentfulEntries({
+  const slugData: EntryCollection<IBlogPostFields> = await getContentfulEntries<IBlogPostFields>({
     content_type: "blogPost",
     select: "fields.slug",
   });
 
   const { items } = slugData;
-  const slugs = items.map((blogPost: any) => 'blog/' + blogPost.fields.slug);
+  const slugs = items.map((blogPost: Entry<IBlogPostFields>) => 'blog/' + blogPost.fields.slug);
 
   // We generate the XML sitemap with the posts data
   const sitemap = generateSiteMap(slugs);
@@ -69,5 +71,7 @@ export async function getServerSideProps({ res }: { res: any }) {
     props: {},
   };
 }
+
+export { getServerSideProps };
 
 export default SiteMap;

@@ -3,21 +3,23 @@ import { INLINES, BLOCKS } from "@contentful/rich-text-types";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function RichTextWrapper(props: any) {
+// manual import is necessary or Typescript takes the wrong "Document" type
+import { Document } from "../../../node_modules/@contentful/rich-text-types/dist/types/types";
 
-  function replaceHyperLink(node: any, children: any) {
+const RichTextWrapper: React.FC<{ contents: Document }> = ({ contents }) => {
+  const replaceHyperLink = (node: any, children: any) => {
     // console.log('link object:', node);
     // this works, but ideally one should check if the link is to an external
     // site, and if so render a simple <a> tag instead of a <Link> function.
     return <Link href={node.data.uri}>{node.content[0].value}</Link>;
-  }
+  };
 
   const renderOptions = {
     renderNode: {
       [BLOCKS.LIST_ITEM]: (node: any, children: any) => {
         const UnTaggedChildren = documentToReactComponents(node, {
           renderNode: {
-            [INLINES.HYPERLINK]: replaceHyperLink,                        
+            [INLINES.HYPERLINK]: replaceHyperLink,
             [BLOCKS.PARAGRAPH]: (node, children) => children,
             [BLOCKS.LIST_ITEM]: (node, children) => children,
           },
@@ -52,7 +54,9 @@ export default function RichTextWrapper(props: any) {
     // for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin
     // added border to make sure background color of bottom margin would be coloured by parent div
     <div className="prose prose-invert max-w-none prose-p:my-0 prose-li:my-0 prose-li::marker:text-white prose-emerald border border-transparent">
-      {documentToReactComponents(props.contents, renderOptions)}
+      {documentToReactComponents(contents, renderOptions)}
     </div>
   );
-}
+};
+
+export default RichTextWrapper;

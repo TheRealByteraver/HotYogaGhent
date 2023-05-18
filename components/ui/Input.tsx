@@ -1,5 +1,7 @@
 import { forwardRef } from "react";
 
+// updating this to Typescript introduces a bug (form validation error)
+
 const Input = forwardRef(function Input(props: any, ref) {
   return (
     <div>
