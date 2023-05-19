@@ -44,7 +44,7 @@ const Events: React.FC<{ events: HYGEvent[] }> = ({ events }) => {
                     {event.eventTime}.
                   </p>
                   <hr />
-                  <RichTextWrapper contents={event.contents} />
+                  {event.contents && <RichTextWrapper contents={event.contents} />}
 
                   {/* todo: insert event.location with google maps */}
                 </div>

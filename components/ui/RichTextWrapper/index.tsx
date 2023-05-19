@@ -54,7 +54,7 @@ const RichTextWrapper: React.FC<{ contents: Document }> = ({ contents }) => {
     // for css for markdown ("prose"), see https://tailwindcss.com/docs/typography-plugin
     // added border to make sure background color of bottom margin would be coloured by parent div
     <div className="prose prose-invert max-w-none prose-p:my-0 prose-li:my-0 prose-li::marker:text-white prose-emerald border border-transparent">
-      {documentToReactComponents(contents, renderOptions)}
+      {contents && documentToReactComponents(contents, renderOptions)}
     </div>
   );
 };
