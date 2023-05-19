@@ -28,7 +28,7 @@ const TimetablePage: React.FC<{
 
           {/* Note: the following markdown contains an anchor tag */}
           <div className="h-fit w-full bg-emerald-900 pt-4 sm:p-2 md:p-10">
-            <RichTextWrapper contents={contents} />
+            {contents && <RichTextWrapper contents={contents} />}
           </div>
 
           <div className="h-screen bg-emerald-900"></div>

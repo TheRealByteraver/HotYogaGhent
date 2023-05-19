@@ -50,7 +50,7 @@ const Blog: React.FC<{
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10 text-white">
           <h1 className="text-2xl mb-4">{blog.title}</h1>
           <em>published on {blog.createdAt}</em>
-          <RichTextWrapper contents={blog.contents} />
+          {blog.contents && <RichTextWrapper contents={blog.contents} />}
 
           <div className="h-screen"></div>
         </div>

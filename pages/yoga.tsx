@@ -19,7 +19,7 @@ const Yoga: React.FC<{
       <MainNavigation />
       <main>
         <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
-          <RichTextWrapper contents={contents} />
+          {contents && <RichTextWrapper contents={contents} />}
           <div className="h-screen"></div>
         </div>
       </main>

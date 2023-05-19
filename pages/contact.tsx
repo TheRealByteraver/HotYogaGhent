@@ -85,7 +85,7 @@ const Contact: React.FC<{ contents: Document }> = ({ contents }) => {
         <main className="relative">
           {/* <MessageSentModal message="hello" /> */}
           <div className="h-fit w-full text-white bg-emerald-900 p-2 md:p-10">
-            <RichTextWrapper contents={contents} />
+            {contents && <RichTextWrapper contents={contents} />}
 
             <form
               onSubmit={handleSubmit(onSubmit)}
