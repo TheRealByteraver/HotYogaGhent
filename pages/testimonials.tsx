@@ -61,7 +61,7 @@ const Testimonials: React.FC<{
                     </div>
 
                     <div className="w-full h-full p-2">
-                      {contents && <RichTextWrapper contents={testimonial.text} />}
+                      {testimonial.text && <RichTextWrapper contents={testimonial.text} />}
                     </div>
                   </div>
                 </li>
