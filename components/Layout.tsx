@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import MainNavigation from "./MainNavigation";
+import { Navbar } from "./ui";
+import { useRouter } from "next/router";
 
 interface Props {
   children?: ReactNode
@@ -7,11 +8,15 @@ interface Props {
 }
 
 const Layout = ({children, ...props}: Props) => {
+  const router = useRouter();
+
   return (
-    <div>
+    <>
+      {router.asPath !== '/' && <Navbar />}
+
       {/* <MainNavigation {...props} /> */}
       {children}
-    </div>
+    </>
   );
 }
 

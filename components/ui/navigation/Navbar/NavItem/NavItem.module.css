@@ -1,0 +1,19 @@
+.navbar {
+  @apply inline-flex items-center px-1 pt-1 text-sm font-semibold border-b-2;
+}
+.navbar-active {
+  @apply text-gray-900 border-yellow-500;
+}
+.navbar-inactive {
+  @apply text-gray-900 text-sm leading-6 border-transparent hover:border-gray-300 hover:text-gray-700;
+}
+
+.panel {
+  @apply block py-2 pr-4 pl-3 text-base border-l-4 leading-7 font-semibold rounded-lg -mx-3;
+}
+.panel-active {
+  @apply text-yellow-900 border-yellow-500 bg-yellow-50;
+}
+.panel-inactive {
+  @apply text-gray-500 border-transparent hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700;
+}
