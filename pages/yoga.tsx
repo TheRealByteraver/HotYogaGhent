@@ -16,9 +16,9 @@ const Yoga: React.FC<{
   return (
     <>
       <HYGHead title={pageTitle} />
-      <MainNavigation />
+      {/* <MainNavigation /> */}
       <main>
-        <div className="h-fit w-full bg-emerald-900 p-2 md:p-10">
+        <div className="w-full p-2 h-fit bg-emerald-900 md:p-10">
           {contents && <RichTextWrapper contents={contents} />}
           <div className="h-screen"></div>
         </div>

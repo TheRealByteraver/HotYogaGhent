@@ -7,7 +7,7 @@ const nextConfig = {
   },
   images: {
     // the below url is for example purposes only of course
-    // domains: ['images/ctfassets.net'],
+    domains: ['res.cloudinary.com', 'images.unsplash.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -16,7 +16,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  }  
+  }
 }
 
 module.exports = nextConfig

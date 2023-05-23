@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import { IValueFields } from "@/@types/generated/contentful";
 // import { Entry } from "contentful-management";
 import { EntryCollection } from "contentful";
+import { Hero } from "@/components/ui";
 
 const Home: React.FC<{ values: IValueFields[] }> = ({ values }) => {
   const router = useRouter();
@@ -43,50 +44,49 @@ const Home: React.FC<{ values: IValueFields[] }> = ({ values }) => {
   return (
     <>
       <HYGHead title="Home" />
-      <MainNavigation>
-        <main className="relative bg-teal-600">
-          {message !== "" && <MessageModal close={close} message={message} />}
-          {/* picture placeholder */}
-          <div className="w-full h-[440px]"></div>
+      <Hero />
+      <main className="relative bg-teal-600">
+        {message !== "" && <MessageModal close={close} message={message} />}
+        {/* picture placeholder */}
+        <div className="w-full h-[440px]"></div>
 
-          {/* Underlying banner */}
-          <div className="relative w-full h-20 bg-lime-600">
-            {/* container for top half circle */}
-            <div className="relative -top-6 mx-auto w-72 h-8 overflow-hidden">
-              <div className="absolute left-1/2 -translate-x-1/2 h-[768px] w-[768px] bg-lime-600 rounded-t-full"></div>
-            </div>
-
-            {/* container for bottom half circle */}
-            <div className="relative -bottom-8 mx-auto w-52 h-7 overflow-hidden">
-              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 h-[768px] w-[768px] bg-lime-600 rounded-b-full"></div>
-            </div>
-
-            <div className="absolute top-0 w-full h-full flex justify-center items-center text-white">
-              {/* Put banner content here */}
-              <p>Hello this is a test Text</p>
-            </div>
+        {/* Underlying banner */}
+        <div className="relative w-full h-20 bg-lime-600">
+          {/* container for top half circle */}
+          <div className="relative h-8 mx-auto overflow-hidden -top-6 w-72">
+            <div className="absolute left-1/2 -translate-x-1/2 h-[768px] w-[768px] bg-lime-600 rounded-t-full"></div>
           </div>
 
-          {/* dark white banner with cards */}
+          {/* container for bottom half circle */}
+          <div className="relative mx-auto overflow-hidden -bottom-8 w-52 h-7">
+            <div className="absolute left-1/2 bottom-0 -translate-x-1/2 h-[768px] w-[768px] bg-lime-600 rounded-b-full"></div>
+          </div>
 
-          <div className="w-full pt-8 bg-yellow-50 flex flex-row flex-wrap justify-center text-sm font-bold text-justify text-stone-500">
-            {values.map((value: IValueFields) => (
-              <div
-                key={value.order}
-                className="w-[340px] min-w-[340px] mx-3 mb-6 p-2 border rounded-xl border-stone-500"
-              >
-                <div className="mx-auto w-fit h-10 p-2 underline">
-                  {value.valueTitle}
-                </div>
-                <p>{value.valueText}</p>
+          <div className="absolute top-0 flex items-center justify-center w-full h-full text-white">
+            {/* Put banner content here */}
+            <p>Hello this is a test Text</p>
+          </div>
+        </div>
+
+        {/* dark white banner with cards */}
+
+        <div className="flex flex-row flex-wrap justify-center w-full pt-8 text-sm font-bold text-justify bg-yellow-50 text-stone-500">
+          {values.map((value: IValueFields) => (
+            <div
+              key={value.order}
+              className="w-[340px] min-w-[340px] mx-3 mb-6 p-2 border rounded-xl border-stone-500"
+            >
+              <div className="h-10 p-2 mx-auto underline w-fit">
+                {value.valueTitle}
               </div>
-            ))}
-          </div>
+              <p>{value.valueText}</p>
+            </div>
+          ))}
+        </div>
 
-          {/* lime bottom banner with mandala's */}
-          <div className="w-full h-64 bg-gradient-to-r from-lime-300 to-lime-700"></div>
-        </main>
-      </MainNavigation>
+        {/* lime bottom banner with mandala's */}
+        <div className="w-full h-64 bg-gradient-to-r from-lime-300 to-lime-700"></div>
+      </main>
     </>
   );
 };
